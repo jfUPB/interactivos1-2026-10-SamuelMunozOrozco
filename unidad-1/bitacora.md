@@ -32,7 +32,68 @@ Teniamos que crear un programa en p5.js que creara un circulo en un canvas y que
 #### Como lo hicimos?
 Usamos el mismo codigo de la clase anterior, porque ya tenia un circulo dibujado y el boton que conecta al microbit, solo teniamos que borrar las funciones innecesarias y colocar las nuevas.
 
+``` js
+let port;
+let connectBtn;
+let x = 200;
+
+function setup() {
+  createCanvas(400, 400);
+  //x = width/2;
+
+  background(220);
+
+  port = createSerial();
+
+  connectBtn = createButton("Connect to micro:bit");
+
+  connectBtn.position(width / 3.1, 300);
+
+  connectBtn.mousePressed(connectBtnClick);
+
+  fill("white");
+
+  ellipse(width / 2, height / 2, 100, 100);
+}
+
+function draw() {
+  if (port.availableBytes() > 0) {
+    let dataRx = port.read(1);
+
+    if (dataRx == "A") {
+      x -= 20;
+    } else if (dataRx == "B") {
+      x += 20;
+    }
+  }
+
+  background(220);
+
+  ellipse(x, height / 2, 100, 100);
+
+  if (!port.opened()) {
+    connectBtn.html("Connect to micro:bit");
+  } else {
+    connectBtn.html("Disconnect");
+  }
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open("MicroPython", 115200);
+  } else {
+    port.close();
+  }
+}
+
+```
+
+´´´
+
+
+
 ## Bitácora de reflexión
+
 
 
 
