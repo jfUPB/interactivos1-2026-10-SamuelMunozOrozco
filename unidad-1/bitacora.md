@@ -32,6 +32,9 @@ Teniamos que crear un programa en p5.js que creara un circulo en un canvas y que
 #### Como lo hicimos?
 Usamos el mismo codigo de la clase anterior, porque ya tenia un circulo dibujado y el boton que conecta al microbit, solo teniamos que borrar las funciones innecesarias y colocar las nuevas.
 
+## Bitácora de reflexión
+
+
 
 
 
