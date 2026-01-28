@@ -154,7 +154,7 @@ function connectBtnClick() {
 ```
 
 * Como habia dicho, se quitaron cosas del codigo original que ya no se necesitaban. Primero quitamos el boton de Send Love y eliminamos la ultima parte del cdigo que mandaba el dato "h" al microbit, "sendBtnClick() { port.write('h'); }", esta se encarga de mostrar el corazon y la carita feliz cuando se presionaba el boton Send Love. Tambien se borro la parte de "fill('black'); text(dataRx, width / 2, height / 2);", que se encargaba de poner una letra dentro del circulo cuando se presionaba uno de los dos botones. Y por ultimo se borro la parte del else if, que volvia el circulo verde si el microbit se agitaba.
-* Algo que no se borro pero que si se cambio fue la siguiente parte "background(220); ellipse(width / 2, height / 2, 100, 100);", esta parte se saco del ciclo que de if y se puso afuera para que el circulo ya no estubiera fijo en la pantalla cambiando el parte del "width / 2" por una variable X ya previamente creada.
+* Algo que no se borro pero que si se cambio fue la siguiente parte "background(220); ellipse(width / 2, height / 2, 100, 100);", esta parte se saco del ciclo que de if y se puso afuera para que el circulo ya no estubiera fijo en la pantalla cambiando el parte del "width / 2" por una variable X ya previamente creada, para que asi se redibujara asi no llegaran datos nuevos y el movimiento fuera fluido.
 * Ahora si cuando empezamos a poner el el codigo pal ejercicio 5, primero, como dije antes, se creo una variable X, que representara la posicion del circulo, valga la redundancia, en su eje X.
 * Luego empezamos con las funciones de los botones. Ya borrado lo que hacia que el circulo cambiara de color, poniamos, dentro de la funcion del boton "a" "x -= 20", lo que hacia era correr el circulo 20 unidades, o pixeles a la izquierda. Y para el boton "b" "x += 20" que es exactamente lo mismo que en el boton a, pero hacia la derecha.
 
@@ -166,6 +166,7 @@ Y ya con eso finaliza la actividad 5.
 
 
 ## Bitácora de reflexión
+
 
 
 
