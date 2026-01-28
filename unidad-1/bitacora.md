@@ -188,7 +188,7 @@ Y ya con eso finaliza la actividad 5.
 
 ## Bitácora de reflexión
 
-#### Actividad 6
+### Actividad 6
 
 ```py
 from microbit import *
@@ -206,7 +206,7 @@ while True:
 
 ```
 
-```pj
+```js
   let port;
   let connectBtn;
   let connectionInitialized = false;
@@ -268,37 +268,50 @@ while True:
 * Primero creamos las variables, las primeras dos "let port;" y " let connectBtn;" son las variables encargadas de la comunicación serial y el botón. Y por ultimo "let connectionInitialized = false;" que se encarga de no leer la información basura que quede al conectarse, así no active nada por accidente.
 * En esta parte reamos el canvas con un ondo gris y el puerto serial.
   
-"function setup() {
+```js
+function setup() {
 
 createCanvas(400, 400);
 
 background(220);
 
-port = createSerial();" 
+port = createSerial();
+``` 
 
 
 * Y acá reamos el botón para conectar y desconectar el microbit.
 
-"connectBtn = createButton("Connect to micro:bit");
+```js
+connectBtn = createButton("Connect to micro:bit");
 
 connectBtn.position(80, 300);
 
-connectBtn.mousePressed(connectBtnClick);", 
-
+connectBtn.mousePressed(connectBtnClick); 
+```
 Creamos el botón para conectar y desconectar el microbit
 
 * La parte del "function draw" es donde va toda la logica del sistema. Esta parte "if (port.opened() && !connectionInitialized) {port.clear();connectionInitialized = true;}" es la encargada de limpiar datos viejos que no interfieran con la logica del sistema.
-*  "if (port.availableBytes() > 0)
 
-*  { let dataRx = port.read(1);"
+```js
+"if (port.availableBytes() > 0)
+```
 
+```js
+{ let dataRx = port.read(1);"
+```
    la primera parte se encarga de preguntar si llego algún dato y la otra lo lee.
    
-*  "if (dataRx == "A")
+```js
+"if (dataRx == "A")
+```
 
-*  { fill("red"); }
+```js
+{ fill("red"); }
+```
 
-*  else if (dataRx == "N") { fill("green");"
+```js
+else if (dataRx == "N") { fill("green");"
+```
 
 *  Esta ya es la logica principal. "if (dataRx == "A") { fill("red");" esto dice que si el dato que se lee es A, el cuadrado se vuelva rojo. "else if (dataRx == "N") { fill("green");" acá es cuando deje de llegar el dato A y llegue el N, se vuelva verde el cuadrado.
 *  " rectMode(CENTER);
@@ -321,6 +334,7 @@ Creamos el botón para conectar y desconectar el microbit
 
 Y por ultimo, esta parte se encarga de cambiar el texto del botón que creamos
   
+
 
 
 
