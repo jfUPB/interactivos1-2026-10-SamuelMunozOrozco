@@ -302,6 +302,7 @@ while True:
     utime.sleep_ms(20)
 ```
 
+#### Codigo p5
 ```js
 let port;
 let connectBtn;
@@ -354,4 +355,5 @@ function sendChar(charToSend) {
 
 
 ## Bitácora de reflexión
+
 
