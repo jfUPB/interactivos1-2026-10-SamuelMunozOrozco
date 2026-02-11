@@ -153,7 +153,8 @@ while True:
 ```
 
 #### Diagrama
-<img width="831" height="453" alt="image" src="https://github.com/user-attachments/assets/c0e264a1-3137-495e-89b8-503ef4edbea7" />
+<img width="831" height="453" alt="image" src="https://github.com/user-attachments/assets/baec7444-2298-4e33-aee5-9b0410163f89" />
+
 
 
 
@@ -360,6 +361,7 @@ function sendChar(charToSend) {
 
 
 ## Bitácora de reflexión
+
 
 
 
