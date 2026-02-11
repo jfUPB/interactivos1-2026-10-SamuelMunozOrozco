@@ -152,6 +152,10 @@ while True:
 
 ```
 
+#### Diagrama
+<img width="831" height="453" alt="image" src="https://github.com/user-attachments/assets/a2216da5-1752-4eca-a4bb-db0e57a67cf5" />
+
+
 ### Actividad 5
 #### Codigo microbit
 ```py
@@ -355,5 +359,6 @@ function sendChar(charToSend) {
 
 
 ## Bitácora de reflexión
+
 
 
