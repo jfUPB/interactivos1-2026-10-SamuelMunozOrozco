@@ -235,10 +235,21 @@ while True:
     utime.sleep_ms(20)
 ```
 
+### Actividad 4
+PWD -- Pad Working Director
+ls -al -- Listar contenido de un directorio
+clear -- Limpia la consola
+flechas -- muestra historial de comandos
+pw + tab x2 -- Muestra todos los comandos de una cierta letra
+cd + nombre del directorio -- change directori (cambiar de directorio)
+
+
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
