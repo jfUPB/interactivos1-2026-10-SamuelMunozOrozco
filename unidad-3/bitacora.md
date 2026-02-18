@@ -236,12 +236,28 @@ while True:
 ```
 
 ### Actividad 4
+
+tabulador x2 -- completa lo que se escribe o muestra las opciones que empiecen con esas letras o números
+
 PWD -- Pad Working Director
+
 ls -al -- Listar contenido de un directorio
+
 clear -- Limpia la consola
+
 flechas -- muestra historial de comandos
+
 pw + tab x2 -- Muestra todos los comandos de una cierta letra
+
 cd + nombre del directorio -- change directori (cambiar de directorio)
+
+git clone + link del repositorio -- para descargar el repositorio de github
+
+code . -- abre visual studio code 
+
+git fetch -- para ver cambios que se hicieron en un repositorio
+
+git pull -- actualiza los cambios en el repositorio
 
 
 
@@ -250,6 +266,7 @@ cd + nombre del directorio -- change directori (cambiar de directorio)
 
 
 ## Bitácora de reflexión
+
 
 
 
