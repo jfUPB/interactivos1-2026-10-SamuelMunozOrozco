@@ -235,7 +235,7 @@ while True:
     utime.sleep_ms(20)
 ```
 
-### Actividad 4
+### Actividad 3 Notas
 
 tabulador x2 -- completa lo que se escribe o muestra las opciones que empiecen con esas letras o números
 
@@ -260,12 +260,16 @@ git fetch -- para ver cambios que se hicieron en un repositorio
 git pull -- actualiza los cambios en el repositorio
 
 
+### Adctividad 4
+
+
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
