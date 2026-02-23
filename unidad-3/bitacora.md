@@ -151,83 +151,134 @@ import utime
 import music
 
 class Temporizador(FSMTask):
+
     def __init__(self):
         super().__init__()
-        self.event_queue = []
-        self.timers = []
+
+        # ========= TIMER =========
         self.counter = 20
-        self.passWord = ["A","B","A"]
-        self.stopSequence = []
         self.myTimer = self.add_timer("Timeout",1000)
-        self.estado_actual = None
+
+        # ========= CONTROL DE PAUSA =========
+        self.paused = False
+
+        # ========= SECUENCIA A-B-A =========
+        self.password = ["A","B","A"]
+        self.sequence = []
+
         self.transition_to(self.estado_config)
 
+    # =====================================================
+    # ========= ESTADO CONFIGURACIÓN =========
+    # A = Aumenta tiempo
+    # B = Disminuye tiempo
+    # Shake = Inicia cuenta regresiva
+    # =====================================================
 
     def estado_config(self, ev):
+
         if ev == ENTRY:
             self.counter = 20
             display.show(FILL[self.counter])
-            self.myTimer.start()
+            self.sequence = []
+
         if ev == "A":
-            if self.counter > 15:
-                self.counter -= 1
-            display.show(FILL[self.counter])
-        if ev == "B":
             if self.counter < 25:
                 self.counter += 1
             display.show(FILL[self.counter])
+
+        if ev == "B":
+            if self.counter > 15:
+                self.counter -= 1
+            display.show(FILL[self.counter])
+
         if ev == "S":
             self.transition_to(self.estado_armed)
 
+
+    # =====================================================
+    # ========= TEMPORIZADOR CORRIENDO =========
+    # A = Pausa / Reanuda
+    # Secuencia A-B-A = Reinicia todo
+    # =====================================================
+
     def estado_armed(self, ev):
+
         if ev == ENTRY:
-            self.stopSequence = []
+            self.paused = False
+            self.sequence = []
             self.myTimer.start()
-        if ev == "Timeout":
+
+        # ===== CUENTA REGRESIVA =====
+        if ev == "Timeout" and not self.paused:
+
             if self.counter > 0:
                 self.counter -= 1
                 display.show(FILL[self.counter])
+
                 if self.counter == 0:
                     self.transition_to(self.estado_timeout)
                 else:
                     self.myTimer.start()
-        if ev == "S":
-            self.transition_to(self.estado_paused)
 
+
+        # ===== BOTONES DURANTE CUENTA =====
         if ev == "A" or ev == "B":
-            self.stopSequence.append(ev)
-            if len(self.stopSequence) == 3:
-                 if self.stopSequence == self.passWord:
-                     self.transition_to(self.estado_config)
-                 else:
-                    self.stopSequence.clear()
-                
-                
 
-    def estado_paused(self,ev):
-        if "ENTRY":
-            self.myTimer.stop()
-        if ev == "S":
-            self.transition_to(self.estado_armed)
-    
-            
+            # Guardar secuencia
+            self.sequence.append(ev)
+
+            # Mantener solo últimos 3
+            if len(self.sequence) > 3:
+                self.sequence.pop(0)
+
+            # Detectar A-B-A
+            if self.sequence == self.password:
+                self.myTimer.stop()
+                self.transition_to(self.estado_config)
+                return
+
+            # Pausar o reanudar con A
+            if ev == "A":
+                if self.paused:
+                    self.paused = False
+                    self.myTimer.start()
+                else:
+                    self.paused = True
+                    self.myTimer.stop()
+
+
+    # =====================================================
+    # ========= TIMEOUT =========
+    # A = Reiniciar todo
+    # =====================================================
 
     def estado_timeout(self, ev):
+
         if ev == ENTRY:
             display.show(Image.SKULL)
             music.play(music.FUNERAL)
+
         if ev == "A":
             music.stop()
             self.transition_to(self.estado_config)
 
+
+
 temporizador = Temporizador()
+
+# =====================================================
+# ========= LOOP PRINCIPAL =========
+# =====================================================
 
 while True:
 
     if button_a.was_pressed():
         temporizador.post_event("A")
+
     if button_b.was_pressed():
         temporizador.post_event("B")
+
     if accelerometer.was_gesture("shake"):
         temporizador.post_event("S")
 
@@ -269,6 +320,7 @@ git pull -- actualiza los cambios en el repositorio
 
 
 ## Bitácora de reflexión
+
 
 
 
