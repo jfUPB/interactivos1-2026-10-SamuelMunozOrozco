@@ -313,6 +313,156 @@ git pull -- actualiza los cambios en el repositorio
 
 ### Adctividad 4
 
+#### Codigo Microbit
+```py
+from microbit import *
+from fsm import FSMTask, ENTRY, EXIT
+from utils import FILL
+import utime
+import music
+
+
+class Temporizador(FSMTask):
+
+    def __init__(self):
+        super().__init__()
+
+        # Timer
+        self.counter = 20
+        self.myTimer = self.add_timer("Timeout",1000)
+
+        # Pausa
+        self.paused = False
+
+        # Secuencia
+        self.password = ["A","B","A"]
+        self.sequence = []
+
+        self.transition_to(self.estado_config)
+
+
+    # Estado de configuracion Botones
+    def estado_config(self, ev):
+
+        if ev == ENTRY:
+            self.counter = 20
+            display.show(FILL[self.counter])
+            self.sequence = []
+
+        if ev == "A":
+            if self.counter < 25:
+                self.counter += 1
+            display.show(FILL[self.counter])
+
+        if ev == "B":
+            if self.counter > 15:
+                self.counter -= 1
+            display.show(FILL[self.counter])
+
+        if ev == "S":
+            self.transition_to(self.estado_armed)
+
+
+    # Temporizador
+    def estado_armed(self, ev):
+
+        if ev == ENTRY:
+            self.paused = False
+            self.sequence = []
+            self.myTimer.start()
+
+        # Cuenta Regresiva
+        if ev == "Timeout" and not self.paused:
+
+            if self.counter > 0:
+                self.counter -= 1
+                display.show(FILL[self.counter])
+
+                if self.counter == 0:
+                    self.transition_to(self.estado_timeout)
+                else:
+                    self.myTimer.start()
+
+
+        # Botones durante Cuenta Regresiva
+        if ev == "A" or ev == "B":
+
+            # Guardar secuencia
+            self.sequence.append(ev)
+
+            # Mantener solo últimos 3
+            if len(self.sequence) > 3:
+                self.sequence.pop(0)
+
+            # Detectar A-B-A
+            if self.sequence == self.password:
+                self.myTimer.stop()
+                self.transition_to(self.estado_config)
+                return
+
+            # Pausar o reanudar con A
+            if ev == "A":
+                if self.paused:
+                    self.paused = False
+                    self.myTimer.start()
+                else:
+                    self.paused = True
+                    self.myTimer.stop()
+
+
+    # Timeout
+
+    def estado_timeout(self, ev):
+
+        if ev == ENTRY:
+            display.show(Image.SKULL)
+            music.play(music.WAWAWAWAA)
+
+        if ev == "A":
+            music.stop()
+            self.transition_to(self.estado_config)
+
+
+
+temporizador = Temporizador()
+
+# Loop Principal
+
+uart.init(115200)
+
+uart.init(115200)
+
+while True:
+
+    if button_a.was_pressed():
+        temporizador.post_event("A")
+
+    if button_b.was_pressed():
+        temporizador.post_event("B")
+
+    if accelerometer.was_gesture("shake"):
+        temporizador.post_event("S")
+
+    if uart.any():
+
+        data = uart.read(1)
+
+        if data is not None:
+
+            char = data.decode()
+
+            if char == "A":
+                temporizador.post_event("A")
+
+            elif char == "B":
+                temporizador.post_event("B")
+
+            elif char == "S":
+                temporizador.post_event("S")
+
+    temporizador.update()
+    utime.sleep_ms(20)
+```
 
 #### Codigo p5
 ```js
@@ -341,7 +491,7 @@ function draw() {
 }
 
 
-// ====== ENVÍO DESDE TECLADO ======
+// Lee El Teclado
 function keyPressed(){
 
   if(port.opened()){
@@ -379,6 +529,7 @@ function connectBtnClick() {
 
 
 ## Bitácora de reflexión
+
 
 
 
