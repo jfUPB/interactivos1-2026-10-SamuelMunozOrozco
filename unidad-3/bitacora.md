@@ -313,6 +313,28 @@ git pull -- actualiza los cambios en el repositorio
 
 ### Adctividad 4
 
+#### Codigo Microbit
+```py
+from microbit import *
+import utime
+import uart
+
+uart.init(115200)
+
+while True:
+
+    if button_a.was_pressed():
+        uart.write("A")
+
+    if button_b.was_pressed():
+        uart.write("B")
+
+    if accelerometer.was_gesture("shake"):
+        uart.write("S")
+
+    utime.sleep_ms(50)
+```
+
 #### Codigo Visual
 ```js
 let temporizador;
@@ -572,6 +594,7 @@ function leerMicrobit() {
 
 
 ## Bitácora de reflexión
+
 
 
 
