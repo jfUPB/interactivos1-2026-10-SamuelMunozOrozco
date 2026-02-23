@@ -314,12 +314,72 @@ git pull -- actualiza los cambios en el repositorio
 ### Adctividad 4
 
 
+#### Codigo p5
+```js
+let port;
+let connectBtn;
+
+function setup() {
+  createCanvas(400, 400);
+  background(220);
+
+  port = createSerial();
+
+  connectBtn = createButton("Connect to micro:bit");
+  connectBtn.position(120, 300);
+  connectBtn.mousePressed(connectBtnClick);
+}
+
+function draw() {
+
+  if (!port.opened()) {
+    connectBtn.html("Connect to micro:bit");
+  } 
+  else {
+    connectBtn.html("Disconnect");
+  }
+}
+
+
+// ====== ENVÍO DESDE TECLADO ======
+function keyPressed(){
+
+  if(port.opened()){
+
+    if(key === 'A' || key === 'a'){
+      port.write('A');
+    }
+
+    if(key === 'B' || key === 'b'){
+      port.write('B');
+    }
+
+    if(key === 'S' || key === 's'){
+      port.write('S');
+    }
+
+  }
+}
+
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open("MicroPython", 115200);
+  } 
+  else {
+    port.close();
+  }
+}
+```
+
+
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
