@@ -566,13 +566,13 @@ function leerMicrobit() {
 ```
 
 
-#### Actividad 4
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
