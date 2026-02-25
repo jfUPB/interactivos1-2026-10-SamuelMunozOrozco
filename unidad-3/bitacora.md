@@ -370,7 +370,7 @@ class Temporizador extends FSMTask {
 
     this.myTimer = this.addTimer(EVENTS.TICK, 1000);
 
-    // ===== PAUSA =====
+    // Pausa
     this.paused = false;
 
     //Secuencia A-B-A
@@ -399,7 +399,7 @@ class Temporizador extends FSMTask {
       this.remainingSeconds = this.totalSeconds;
       this.transitionTo(this.estado_armed);
     }
-  };
+  }
 
   estado_armed = (ev) => {
 
@@ -457,7 +457,7 @@ class Temporizador extends FSMTask {
     else if (ev === EXIT) {
       this.myTimer.stop();
     }
-  };
+  }
 
   estado_timeout = (ev) => {
     if (ev === ENTRY) {
@@ -466,7 +466,7 @@ class Temporizador extends FSMTask {
     else if (ev === EVENTS.DEC) {
       this.transitionTo(this.estado_config);
     }
-  };
+  }
 }
 
 function setup() {
@@ -891,6 +891,7 @@ function leerMicrobit() {
   }
 }
 ```
+
 
 
 
