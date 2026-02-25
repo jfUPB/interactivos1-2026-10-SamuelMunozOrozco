@@ -311,6 +311,8 @@ git fetch -- para ver cambios que se hicieron en un repositorio
 git pull -- actualiza los cambios en el repositorio
 
 
+
+## Bitácora de aplicación 
 ### Adctividad 4
 
 #### Codigo Microbit
@@ -587,13 +589,312 @@ function leerMicrobit() {
 }
 ```
 
-
-
-## Bitácora de aplicación 
-
-
-
 ## Bitácora de reflexión
+### Actividad 5
+* Tuvimos un error al principio de la actividad, porque no entendiamos correctamente la logica de como recibir los mensajes. Lo pusimos de tal manera que el sistema recibia varios mensajes al mismo tiempo y eso hacía que recibiera mensajes al azar. Luego con ayuda del profesor logramos corregir correctamente la logica. Y nos quedo como se muestra en la bitoca en la parte de Microbit que Recibe Mensajes
+* otro error, era que pensabamos que a la hora de poner "receive()" Pensabamos que dentro de los parentesis iba el tipo de dato que recibia, pero no era asi.
+
+
+
+#### Codigo Microbit que Recibe Mensajes
+```py
+from microbit import *
+import utime
+import radio
+import music
+
+radio.config(group=17)
+radio.on()
+uart.init(115200)
+
+while True:
+    message = radio.receive()
+    if message:
+        if message == "A":
+            uart.write("A")
+        if message == "B":
+            uart.write("B")
+        if message == "S":
+            uart.write("S")
+            music.play(music.FUNK)
+```
+
+#### Codigo Microbit que Manda Mensajes
+```py
+from microbit import *
+import radio
+radio.config(group=17)
+
+radio.on()
+uart.init(baudrate=115200)
+
+while True:
+    if button_a.was_pressed():
+        uart.write('A')
+        radio.send("A")
+    if button_b.was_pressed():
+        uart.write('B')
+        radio.send("B")
+    if accelerometer.was_gesture('shake'):
+        uart.write('S')
+        radio.send("S")
+```
+
+#### Codigo de Visual Code
+```js
+let temporizador;
+let port;
+let connectBtn;
+let renderer = new Map();
+
+const TIMER_LIMITS = {
+  min: 15,
+  max: 25,
+  defaultValue: 20,
+};
+
+const EVENTS = {
+  DEC: "B",
+  INC: "A",
+  START: "S",
+  TICK: "Timeout",
+}
+
+class Temporizador extends FSMTask {
+  constructor(minValue, maxValue, defaultValue) {
+    super();
+
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.defaultValue = defaultValue;
+    this.configValue = defaultValue;
+    this.totalSeconds = defaultValue;
+    this.remainingSeconds = defaultValue;
+
+    this.myTimer = this.addTimer(EVENTS.TICK, 1000);
+
+    // Pausa
+    this.paused = false;
+
+    //Secuencia A-B-A
+    this.password = ["A","B","A"];
+    this.sequence = [];
+
+    this.transitionTo(this.estado_config);
+  }
+
+  get currentState() {
+    return this.state;
+  }
+
+  estado_config = (ev) => {
+    if (ev === ENTRY) {
+      this.configValue = this.defaultValue;
+    }
+    else if (ev === EVENTS.DEC) {
+      if (this.configValue > this.minValue) this.configValue--;
+    }
+    else if (ev === EVENTS.INC) {
+      if (this.configValue < this.maxValue) this.configValue++;
+    }
+    else if (ev === EVENTS.START) {
+      this.totalSeconds = this.configValue;
+      this.remainingSeconds = this.totalSeconds;
+      this.transitionTo(this.estado_armed);
+    }
+  }
+
+  estado_armed = (ev) => {
+
+    if (ev === ENTRY) {
+      this.paused = false;
+      this.sequence = [];
+      this.myTimer.start();
+    }
+
+    // Cuenta regresiva
+    else if (ev === EVENTS.TICK && !this.paused) {
+
+      if (this.remainingSeconds > 0) {
+        this.remainingSeconds--;
+
+        if (this.remainingSeconds === 0) {
+          this.transitionTo(this.estado_timeout);
+        }
+        else {
+          this.myTimer.start();
+        }
+      }
+    }
+
+    // Botones durante la cuenta
+    else if (ev === EVENTS.DEC || ev === EVENTS.INC) {
+
+      this.sequence.push(ev);
+
+      if (this.sequence.length > 3) {
+        this.sequence.shift();
+      }
+
+      // Detectar A-B-A
+      if (this.sequence.join() === this.password.join()) {
+        this.myTimer.stop();
+        this.transitionTo(this.estado_config);
+        return;
+      }
+
+      // Pausar / Reanudar con A
+      if (ev === "A") {
+
+        if (this.paused) {
+          this.paused = false;
+          this.myTimer.start();
+        }
+        else {
+          this.paused = true;
+          this.myTimer.stop();
+        }
+      }
+    }
+
+    else if (ev === EXIT) {
+      this.myTimer.stop();
+    }
+  }
+
+  estado_timeout = (ev) => {
+    if (ev === ENTRY) {
+      console.log("¡TIEMPO!");
+    }
+    else if (ev === EVENTS.DEC) {
+      this.transitionTo(this.estado_config);
+    }
+  }
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+
+  // ===== SERIAL =====
+  port = createSerial();
+
+  connectBtn = createButton('Connect to micro:bit');
+  connectBtn.position(80, 300);
+  connectBtn.mousePressed(connectBtnClick);
+
+  temporizador = new Temporizador(
+    TIMER_LIMITS.min,
+    TIMER_LIMITS.max,
+    TIMER_LIMITS.defaultValue
+  );
+
+  textAlign(CENTER, CENTER);
+
+  renderer.set(temporizador.estado_config, () => drawConfig(temporizador.configValue));
+  renderer.set(temporizador.estado_armed, () => drawArmed(temporizador.remainingSeconds, temporizador.totalSeconds));
+  renderer.set(temporizador.estado_timeout, () => drawTimeout());
+}
+
+function draw() {
+
+  if (!port.opened()) {
+    connectBtn.html('Connect to micro:bit');
+  }
+  else {
+    connectBtn.html('Disconnect');
+  }
+
+  leerMicrobit();
+
+  temporizador.update();
+  renderer.get(temporizador.currentState)?.();
+}
+
+function drawConfig(val) {
+  background(20, 40, 80);
+  fill(255);
+  textSize(120);
+  text(val, width / 2, height / 2);
+  textSize(18);
+  fill(200);
+  text("A(+) B(-) S(start)", width / 2, height / 2 + 100);
+}
+
+function drawArmed(val, total) {
+  background(20, 20, 20);
+  let pulse = sin(frameCount * 0.1) * 10;
+
+  noFill();
+  strokeWeight(20);
+  stroke(255, 100, 0, 50);
+  ellipse(width / 2, height / 2, 250);
+
+  stroke(255, 150, 0);
+  let angle = map(val, 0, total, 0, TWO_PI);
+  arc(width / 2, height / 2, 250, 250, -HALF_PI, angle - HALF_PI);
+
+  fill(255);
+  noStroke();
+  textSize(100 + pulse);
+  text(val, width / 2, height / 2);
+}
+
+function drawTimeout() {
+  let bg = frameCount % 20 < 10 ? color(150, 0, 0) : color(255, 0, 0);
+  background(bg);
+  fill(255);
+  textSize(100);
+  text("¡TIEMPO!", width / 2, height / 2);
+}
+
+function keyPressed() {
+  if (key === "a" || key === "A") temporizador.postEvent("A");
+  if (key === "b" || key === "B") temporizador.postEvent("B");
+  if (key === "s" || key === "S") temporizador.postEvent("S");
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open('MicroPython', 115200);
+  }
+  else {
+    port.close();
+  }
+}
+
+
+function leerMicrobit() {
+
+  if (port.opened()) {
+
+    let data = port.read();
+
+    if (data) {
+
+      let char = data.trim();
+
+      if (char === "A") {
+        temporizador.postEvent("A");
+      }
+      else if (char === "B") {
+        temporizador.postEvent("B");
+      }
+      else if (char === "S") {
+        temporizador.postEvent("S");
+      }
+
+    }
+  }
+}
+```
+
+
+
+
 
 
 
