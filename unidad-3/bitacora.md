@@ -371,7 +371,7 @@ class Temporizador extends FSMTask {
     // ===== PAUSA =====
     this.paused = false;
 
-    // ===== SECUENCIA A-B-A =====
+    //Secuencia A-B-A
     this.password = ["A","B","A"];
     this.sequence = [];
 
@@ -407,7 +407,7 @@ class Temporizador extends FSMTask {
       this.myTimer.start();
     }
 
-    // ===== CUENTA REGRESIVA =====
+    // Cuenta regresiva
     else if (ev === EVENTS.TICK && !this.paused) {
 
       if (this.remainingSeconds > 0) {
@@ -422,7 +422,7 @@ class Temporizador extends FSMTask {
       }
     }
 
-    // ===== BOTONES DURANTE CUENTA =====
+    // Botones durante la cuenta
     else if (ev === EVENTS.DEC || ev === EVENTS.INC) {
 
       this.sequence.push(ev);
@@ -594,6 +594,7 @@ function leerMicrobit() {
 
 
 ## Bitácora de reflexión
+
 
 
 
