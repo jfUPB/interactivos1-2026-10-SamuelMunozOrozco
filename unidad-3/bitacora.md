@@ -310,6 +310,18 @@ git fetch -- para ver cambios que se hicieron en un repositorio
 
 git pull -- actualiza los cambios en el repositorio
 
+node + un server -- 
+
+npm -- node package manager
+
+control + C -- Termina el proceso
+
+* Tener archivos en el browser. HTTP SERVER
+
+* --device microbit (Pa conectar el microbit)
+
+* Capa de abtracción???
+
 
 
 ## Bitácora de aplicación 
@@ -891,6 +903,7 @@ function leerMicrobit() {
   }
 }
 ```
+
 
 
 
