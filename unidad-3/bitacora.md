@@ -310,7 +310,10 @@ git fetch -- para ver cambios que se hicieron en un repositorio
 
 git pull -- actualiza los cambios en el repositorio
 
-node + un server -- 
+node + un server (Para conectar el servidor)
+
+node + un servidor --device microbit (Para conectar el microbit al servidor y pueda recibir datos)
+
 
 npm -- node package manager
 
@@ -903,6 +906,7 @@ function leerMicrobit() {
   }
 }
 ```
+
 
 
 
