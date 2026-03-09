@@ -1,2 +1,13 @@
-# Explicacion Codigo
+# Explicacion Diagrama
+
+### HTTP SERVER
+* El servidor web que entrega los archivos al navegador, o sea, cuando se abre la pagina en el navegador, este servidor envia los archivos del proyecto
+
+#### index.html
+Es la pagina principal
+
+Funciones
+* Carga la pagina web
+* Importa los scripts
+* Inicia la aplicacion
 
