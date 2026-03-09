@@ -111,6 +111,87 @@ class PainterTask extends FSMTask {
 * Es la clase que controla el dibujo en el sitema
 * El "extends FSMTask" significa que hereda de otra clase con ese nombre
 
+Tiene dos estados principales
+
+##### estado_esperando
+* El sistema espera a que el microbit se conecte
+
+##### estado_corriendo
+* El microbit esta conectado y el programa puede dibujar
+
+#### Constructor
+```js
+constructor() {
+    super();
+
+    this.c = color(181, 157, 0);
+    this.lineSize = 100;
+    this.angle = 0;
+    this.clickPosX = 0;
+    this.clickPosY = 0;
+```
+* recordar que el constructor es una funcion de una clase, que se ejecuta cuando se crea el objeto, en este caso, "painterTask"
+
+Que hace "super()"?
+* Llama al constructor de la clase "FSMTask". Porque "painterTask" hereda de "FSMTask"
+
+#### Variables del constructor
+* Color de la linea
+  - this.c = color(181, 157, 0);
+
+* Tamaño de la línea
+  - this.lineSize = 100;
+
+* Ángulo de rotación
+  - this.angle = 0;
+  - Cada que se dibuja una linea, la linea rota
+
+* Posición del último clic
+  - this.clickPosX = 0;
+  
+    this.clickPosY = 0;
+  - Guarda la posicion de donde se empezo a dibujar
+
+#### Datos que llegan del microbit
+```js
+this.rxData = {
+    x: 0,
+    y: 0,
+    btnA: false,
+    btnB: false,
+    prevA: false,
+    prevB: false,
+    ready: false
+};
+```
+* Aqui se guardan los datos que llegan desde el micrbit
+Que representa cada variable
+* X y Y
+  - X:0. Valor del acelerometro en X
+  - Y:0. Valor del acelerometro en Y
+
+* btnA, btnB
+  - btnA: Estado del boton A del microbit
+  - btnB: Estado del boton B del microbit
+
+* prevA, prevB, prevY
+  - prevA: Guarda el estado anterior del boton A. Sirve cuando el bton acaba de ser presionado
+  - prevB: Guarda el estado anterior del boton B
+  - prevY: Indica si ya llegaron datos del microbit
+
+#### Inicio de la maquina de estados
+```js
+this.transitionTo(this.estado_esperando);
+```
+Que hace esta linea?
+* Pone el sistema en su primer estado. "estado_esperando"
+* Es sistema empieza esperando la conexion del microbit
+
+Que hace "transitionTo()" 
+* Es una funcion de FSM
+* Sirve para cambiar de estado
+
+
 
 
 
@@ -120,4 +201,5 @@ class PainterTask extends FSMTask {
 
 
 ## Bitácora de reflexión
+
 
