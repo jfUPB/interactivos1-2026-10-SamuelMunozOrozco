@@ -304,7 +304,7 @@ cd + nombre del directorio -- change directori (cambiar de directorio)
 
 git clone + link del repositorio -- para descargar el repositorio de github
 
-code . -- abre visual studio code 
+code . -- abre visual studio code (El punto es para la carpeta actual)
 
 git fetch -- para ver cambios que se hicieron en un repositorio
 
@@ -903,6 +903,7 @@ function leerMicrobit() {
   }
 }
 ```
+
 
 
 
