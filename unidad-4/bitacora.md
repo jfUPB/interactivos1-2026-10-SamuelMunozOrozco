@@ -82,6 +82,29 @@ const EVENTS = {
     KEY_RELEASED: "KEY_RELEASED",
 };
 ```
+* Es un objeto que contiene los diferentes eventos que el sistema maneja
+* Se hace esto para tener un codigo mas organizado y evitar errores de escritura
+* Asi solo hay que copiar EVENT."El evento que queramos tener", sin temer a equivocarnos al escribirlo y tener un error
+
+#### Que significa cada evento
+
+##### CONNECT
+* Se activa cuando el bridge se conecta con el microbit
+
+#### DISCONNECT
+* Se activa cuando se pierde la conexion
+
+##### DATA
+* Se activa cuando llegan datos del microbit
+
+##### KEY_PRESSED
+* Se activa cuando se presiona una tecla
+
+##### KEY_RELEASED
+* Se activa cuando el usuario sualta una tecla
+
+
+### Clae principal del sistema - PainterTask
 
 
 
@@ -92,21 +115,3 @@ const EVENTS = {
 
 
 ## Bitácora de reflexión
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
