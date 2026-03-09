@@ -73,6 +73,8 @@ Ejemplo:
 
 ### Explicacion codigo Sketch.js
 
+#### Definicion deeventos
+
 
 
 
@@ -82,6 +84,7 @@ Ejemplo:
 
 
 ## Bitácora de reflexión
+
 
 
 
