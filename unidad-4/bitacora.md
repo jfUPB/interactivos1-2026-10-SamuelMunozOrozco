@@ -68,12 +68,20 @@ Ejemplo:
 
 #### Simulador Microbit
 * La version virtual del microbit
-  - jfhngn\
-  - vjnnfdn
+
 
 ### Explicacion codigo Sketch.js
 
 #### Definicion deeventos
+```js
+const EVENTS = {
+    CONNECT: "CONNECT",
+    DISCONNECT: "DISCONNECT",
+    DATA: "DATA",
+    KEY_PRESSED: "KEY_PRESSED",
+    KEY_RELEASED: "KEY_RELEASED",
+};
+```
 
 
 
@@ -84,6 +92,7 @@ Ejemplo:
 
 
 ## Bitácora de reflexión
+
 
 
 
