@@ -42,7 +42,7 @@ Ejemplo:
 ##### drawRunnig
 * Se encarga de dibujar en pamntalla
 
-#### bridgeClient.js
+##### bridgeClient.js
 * Permite que el navegador se comunique con el servidor (Ya que el navegador no puede hablar directamente con el "hardware")
 
 #### Server Bridge (bridgeServer.js)
@@ -201,5 +201,6 @@ Que hace "transitionTo()"
 
 
 ## Bitácora de reflexión
+
 
 
