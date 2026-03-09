@@ -68,6 +68,8 @@ Ejemplo:
 
 #### Simulador Microbit
 * La version virtual del microbit
+  - jfhngn\
+  - vjnnfdn
 
 ### Explicacion codigo Sketch.js
 
@@ -80,6 +82,7 @@ Ejemplo:
 
 
 ## Bitácora de reflexión
+
 
 
 
