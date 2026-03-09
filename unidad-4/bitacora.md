@@ -42,7 +42,7 @@ Ejemplo:
 ##### drawRunnig
 * Se encarga de dibujar en pamntalla
 
-### bridgeClient.js
+#### bridgeClient.js
 * Permite que el navegador se comunique con el servidor (Ya que el navegador no puede hablar directamente con el "hardware")
 
 #### Server Bridge (bridgeServer.js)
@@ -56,7 +56,7 @@ Ejemplo:
 * Lee los datos del puerto serial
 * Interpreta el protocolo del microbit
 
-### SimAdapter.js
+#### SimAdapter.js
 * Conecta con el simulador de microbit
 
 #### BaseAdapter.js
@@ -104,7 +104,12 @@ const EVENTS = {
 * Se activa cuando el usuario sualta una tecla
 
 
-### Clae principal del sistema - PainterTask
+### Clase principal del sistema - PainterTask
+```js
+class PainterTask extends FSMTask {
+```
+* Es la clase que controla el dibujo en el sitema
+* El "extends FSMTask" significa que hereda de otra clase con ese nombre
 
 
 
@@ -115,3 +120,4 @@ const EVENTS = {
 
 
 ## Bitácora de reflexión
+
