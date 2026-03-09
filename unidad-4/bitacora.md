@@ -52,21 +52,21 @@ Ejemplo:
 #### Adapters
 * Es una capa que traduce la comunicacion del hardware, o sea, convierte los datos al formato que usa el sistema
 
-#### MicrobitASCIIAdapter.js
+##### MicrobitASCIIAdapter.js
 * Lee los datos del puerto serial
 * Interpreta el protocolo del microbit
 
-#### SimAdapter.js
+##### SimAdapter.js
 * Conecta con el simulador de microbit
 
-#### BaseAdapter.js
+##### BaseAdapter.js
 * Es la clase base de los adapters, o sea, todos los adapters heredan de esta clase
 
-#### Microbit
+##### Microbit
 * Aqui es donde se encuentra el "hardware" real
 * Envia los datos por "serial (UART)"
 
-#### Simulador Microbit
+##### Simulador Microbit
 * La version virtual del microbit
 
 
@@ -201,6 +201,7 @@ Que hace "transitionTo()"
 
 
 ## Bitácora de reflexión
+
 
 
 
