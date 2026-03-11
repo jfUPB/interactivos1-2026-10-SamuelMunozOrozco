@@ -412,27 +412,58 @@ aState = 1
 
 bState = 0
 
-Luego se hace el Checksum. ("abs()" es valor absoluto)
+Luego se hace el Checksum, en el microbit. ("abs()" es valor absoluto)
 ```py
 chk = abs(xValue) + abs(yValue) + aState + bState
 ```
+se veria asi el calculo:
+
+chk = |x| + |y| + A + B
+
 Y la suma da: 258
 
+Luego se construye el mensaje y se envia por el puerto serial
+```py
+  data = "$T:{}|X:{}|Y:{}|A:{}|B:{}|CHK:{}\n".format(t, xValue, yValue, aState, bState, chk)
+    uart.write(data)
+    sleep(100) # Envia datos a 10 Hz
+```
+Llegan de esta forma: $T:45020|X:-245|Y:12|A:1|B:0|CHK:258
+
+Ya luego, el adapter transforma los datos, extrae los valores y verifica el Checksum, haciendo otro Checksum, pero con los valores de los datos que llegaron 
+```js
+const calcChk = Math.abs(x) + Math.abs(y) + btnA + btnB;
+```
+
+Cunaod hace la operacion, lo compara con el Checksum que llego y si no es lo mismo, muestra el error en la consola
+```js
+if (calcChk !== chk) {
+    throw new ParseError("Checksum mismatch");
+}
+```
+
+###### Cambios finales
+En el adapter original teniamos las siguientes lineas:
+```js
+ if (!["true", "false"].includes(btnA) || !["true", "false"].includes(btnB)) throw new ParseError("Invalid button data");
+
+  return { x: x | 0, y: y | 0, btnA: btnA === "true", btnB: btnB === "true" };
+```
+La primer parte comprueba que los botones solo tienen dos valores validos, usando texto ya que ese era el protocolo original
+
+En el nuevo adapter borramos la primera parte, porque como el nuevo protocolo ya no manda string, sino un Number, pues no la necesitamos, lo que solo nos deja cambiar, el return:
+```js
+return { x: x | 0, y: y | 0, btnA: btnA === 1, btnB: btnB === 1 };
+```
+Aqui convierte el formato al estandar del nuevo protocolo, que es usar 1 y 0, luego envia los datos al sistema
 
 
 
-
-
-
-
-
-
-
-Que es un objeto JSON
 
 
 
 ## Bitácora de reflexión
+
 
 
 
