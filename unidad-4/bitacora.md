@@ -331,7 +331,7 @@ CHK: Checksum calculable. Es un número entero de 3 dígitos que representa la s
 
 Ahora tendriaos un nuevo valor que seria T, tambien se cambiaria el tipo de valor en btnA y btnB, ya no serian "String" sino "Number". Y por ultimo agregariamos un Checksum, cual funcion seria de sumar las variables y verificar si coincidian o no. Si no coincidian, significaba que la trama era corrupata y el sistema debia ignorarla pero sin actualizar la vista o el canvas, pero debia registrar un mensaje de advertencia en la consola
 
-##### Cambios en el codigo
+#### Cambios en el codigo
 ```js
 const values = line.trim().split("|");
 ```
@@ -351,7 +351,7 @@ values[5] = "CHK:258"
 
 
 
-###### Por que usamos values[1].split(":")[1]?
+##### Por que usamos values[1].split(":")[1]?
 En el nuevo protocolo los valores vienen con una etiqueta
 
 Ejemplo: x:-245
@@ -360,16 +360,63 @@ Y solo necesitamos el numero para asi realizar el Checksum. Si solo usamos "valu
 
 Por eso al usar "values[1].split(":")[1]". Se separa la parte de "x:" de la parte "-245". Y por eso al final ponemos [1] pa quedarnos finalmente con ese valor
 
-###### Para que usamos el Checksum?
+##### Para que usamos el Checksum?
 Lo usamos como una medida de seguridad para verificar si los datos enviados por el microbit son correctos y no han sido corrompidos.
 
 Pueden pasar como ruido en la comunicacion, datos incompletos o caracteres corruptos
 
 Ejemplo:
 
+Lo que se espera: X:-245|Y:12|A:1|B:0
 
+Lo que llega: X:-245|Y:1Z|A:1|B:0
 
+Si esto el sistema no lo detecta, pues el adapter no va a traducir los dats correctos y dañar el sistema
 
+##### Como funciona el Checksum desde el microbit
+Codigo completo del Microbit:
+```py
+from microbit import *
+
+uart.init(115200)
+display.set_pixel(0,0,9)
+
+while True:
+    xValue = accelerometer.get_x()
+    yValue = accelerometer.get_y()
+    aState = 1 if button_a.is_pressed() else 0
+    bState = 1 if button_b.is_pressed() else 0
+
+    t = running_time()
+
+    chk = abs(xValue) + abs(yValue) + aState + bState
+    
+    data = "$T:{}|X:{}|Y:{}|A:{}|B:{}|CHK:{}\n".format(t, xValue, yValue, aState, bState, chk)
+    uart.write(data)
+    sleep(100) # Envia datos a 10 Hz
+```
+En esta parte el microbit lee los sensores:
+```py
+xValue = accelerometer.get_x()
+    yValue = accelerometer.get_y()
+    aState = 1 if button_a.is_pressed() else 0
+    bState = 1 if button_b.is_pressed() else 0
+```
+Ejemplo de los valores:
+
+xValue = -245
+
+yValue = 12
+
+aState = 1
+
+bState = 0
+
+Luego se hace el Checksum. ("abs()" es valor absoluto)
+```py
+chk = abs(xValue) + abs(yValue) + aState + bState
+```
+Y la suma da: 258
 
 
 
@@ -386,6 +433,7 @@ Que es un objeto JSON
 
 
 ## Bitácora de reflexión
+
 
 
 
