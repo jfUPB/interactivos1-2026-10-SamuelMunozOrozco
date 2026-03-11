@@ -1055,6 +1055,8 @@ function windowResized() {
 
 
 ## Bitácora de reflexión
+<img width="1392" height="724" alt="image" src="https://github.com/user-attachments/assets/c511dc1f-51f6-4abc-932f-8fae6f1463ba" />
+
 
 
 
