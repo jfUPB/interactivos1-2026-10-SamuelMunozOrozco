@@ -209,7 +209,7 @@ Y solo necesitamos el numero para asi realizar el Checksum. Si solo usamos "valu
 
 Por eso al usar "values[1].split(":")[1]". Se separa la parte de "x:" de la parte "-245". Y por eso al final ponemos [1] pa quedarnos finalmente con ese valor
 
-##### Para que usamos el Checksum?
+#### Para que usamos el Checksum?
 Lo usamos como una medida de seguridad para verificar si los datos enviados por el microbit son correctos y no han sido corrompidos.
 
 Pueden pasar como ruido en la comunicacion, datos incompletos o caracteres corruptos
@@ -291,7 +291,7 @@ if (calcChk !== chk) {
 }
 ```
 
-###### Cambios finales
+#### Cambios finales
 En el adapter original teniamos las siguientes lineas:
 ```js
  if (!["true", "false"].includes(btnA) || !["true", "false"].includes(btnB)) throw new ParseError("Invalid button data");
@@ -305,6 +305,20 @@ En el nuevo adapter borramos la primera parte, porque como el nuevo protocolo ya
 return { x: x | 0, y: y | 0, btnA: btnA === 1, btnB: btnB === 1 };
 ```
 Aqui convierte el formato al estandar del nuevo protocolo, que es usar 1 y 0, luego envia los datos al sistema
+
+
+#### Cambios en el bridgeServer.js
+El servidor original solo tenia esta linea para usar un solo adaptador
+```js
+const MicrobitAsciiAdapter = require("./adapters/MicrobitASCIIAdapter");
+```
+Como por el adapter nuevo, ya necesitabamos que el bridgeServer recibiera los datos en el nuevo formato. Entonces agregamos esta nueva linea pa que funcione el nuevo adapter
+```js
+const MicrobitAsciiAdapter = require("./adapters/MicrobitASCIIAdapter");
+const MicrobitASCIIAdapter2 = require("./adapters/MicrobitASCIIAdapter2");
+```
+
+
 
 
 #### Codigo de Microbit
@@ -610,4 +624,5 @@ module.exports = MicrobitAsciiAdapter;
 
 
 ## Bitácora de reflexión
+
 
