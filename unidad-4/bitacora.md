@@ -87,7 +87,7 @@ Nos pedian integrar un nuevo hardware con un sistema software ya hecho y no podi
 ```js
 function parseCsvLine(line) {
   const values = line.trim().split(",");
-  if (values.length !== 4) throw new ParseError(`Expected 4 values, got ${values.length}`);
+  if (values.length !== 4) throw new ParseError(`Expected 6 values, got ${values.length}`);
 
   const x = Number(values[0]);
   const y = Number(values[1]);
@@ -141,7 +141,7 @@ Y finalmente se genera el objeto que el sistema utiliza. Lo que el bridgeServer 
 ```js
 function parseCsvLine(line) {
   const values = line.trim().split("|");
-  if (values.length !== 6) throw new ParseError(`Expected 4 values, got ${values.length}`);
+  if (values.length !== 6) throw new ParseError(`Expected 6 values, got ${values.length}`);
 
   const x = Number(values[1].split(":")[1]);
   const y = Number(values[2].split(":")[1]);
@@ -610,3 +610,4 @@ module.exports = MicrobitAsciiAdapter;
 
 
 ## Bitácora de reflexión
+
