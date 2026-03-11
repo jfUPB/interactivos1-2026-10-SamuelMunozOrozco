@@ -72,31 +72,6 @@ Ejemplo:
 
 ## Bitácora de aplicación 
 
-Es esta actividad teniamos que simuklar un escenario de trabajo de la vida real, donde tenemos que integrar un nuevo hardware a un sistema software ya construido que no podemos romper.
-
-Primero se nos pedia crear un nuevo adapter, que es una capa que traduce la comunicacion del hardware, el microbit, a el formato del sistema. El adapter es una copia de uno ya existente llamado MicrobitAsciiAdapter.js, en donde solo tenemos que cambiar una pequeña parte de la logica segun nos pide el contrato
-
-### Contexto
-Se nos pide implementar una nueva arquitectura de comunicacion entre un dispositivo microbit y una aplicacion web, pero sin romper el sistema software proporcionado.
-
-Hay que crear un nuevo adapter a base de uno que ya tenemos, para permitir la comunicacion  por medio de un servidor puente (bridgeServer.js) que recibe los datos del microbit por puerto serial.
-
-#### Flujo del sistema
-El sistema fluiria de la siguiente manera:
-
-1. Microbit: Manda la informacion de los sensores y botones por el puerto serial
-2. Adapter: Interpreta la informacion
-3. bridgeServer: distribuye los datos a los clientes conectados
-4. bridgeClient: Recibe los datos en el navegador
-5. PainterTask: Utiliza esos datos para generar el dibujo en el dibujo
-
-#### Lo que pedia el ejercicio
-Se nos pedia cambiar el sistema para que el microbit envie los datos a un nuevo adapter con un diferente formato que el anterior.
-
-El primer adapter tenia un formato CSV (Comma Separated Values), ejemplo: 123,-50,true,false. Por lo tando el adapter separa los valores usando "," 
-
-El nuevo adapter usaba separadores con "|" y usaba un checksum, para comparar los valores de los datos que llegaban con los que mandaba el microbit
-
 
 ### Que pedia el ejercicio
 Nos pedian integrar un nuevo hardware con un sistema software ya hecho y no podiamos modificarlo. El nuevo hardware usa un protocolo diferente de comunicacion serial, por lo que teniamos que crear un adapter nuevo que interpretara correctmente los datos
@@ -337,6 +312,7 @@ Aqui convierte el formato al estandar del nuevo protocolo, que es usar 1 y 0, lu
 
 
 ## Bitácora de reflexión
+
 
 
 
