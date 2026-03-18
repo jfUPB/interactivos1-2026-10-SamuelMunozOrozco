@@ -93,6 +93,38 @@ En resumen, **'>2h2B'** guarda los datos en un orden determinado
   x (2) + y (2) + A (1) + B (1) = 6 bytes SIEMPRE
   ```
 
+  #### Notas importantes
+  * El binario siempre ocupa el mismo tamaño porque el "**struct.pack**" define exactamente cuantos bytes usa cada dato. 2 bytes para X y 2 para Y, y 1 byte para el botón A y 1 para el botón B
+  * La forma Binaria es más eficiente, porque al usar menos bytes es más rapido
+
+#### Preguntas bitácora
+
+##### 1. Ventajas y desventajas del binario
+Ventajas
+* Usa menos bytes
+* Transmite los datos más rapido
+* Tiene un tamaño fijo
+-
+Desventajas
+* No es legible por una persona
+* Más difícil de depurar o hacer debug
+* Necesita conocer el formato exacto
+
+##### 2. Representación en hexadecimal
+```
+ xValue=500, yValue=524, aState=True, bState=False
+```
+```
+01 F4 02 0C 01 00
+```
+
+* 01 F4 = 500
+* 02 0C = 524
+* 01 = A (true)
+* 00 = B (false)
+
+
+
 
 
 
