@@ -123,6 +123,37 @@ Desventajas
 * 01 = A (true)
 * 00 = B (false)
 
+### El problema de sincronización — ¿Por qué necesitamos framing?
+* La comunicación serial es un **flujo de bytes**, no es como si se mandaran paquetes de informacion por separado:
+```
+[PAQUETE 1] [PAQUETE 2] [PAQUETE 3]
+```
+
+Se manda TODO de seguido:
+```
+01 F4 02 0C 01 00 03 E8 01 F0 00 01 ...
+```
+
+* Si no llega un dato, o llega uno de más o erroneo, la lectura del sistema se daña por completo
+* Lo que puede pasar es que se interpreten valores de dos paquetes distintos como si fueran uno solo y dar valores absurdo como:
+
+Lo que se lee mal
+```
+F4 02 0C 01 00 03
+```
+resulta en:
+* Valores absurdos:
+  - 3073
+  - 513
+
+#### ¿Por qué pasa esto?
+* No hay inicio de paqete
+* No hay fin de paquete
+* No hay separadores
+
+
+
+  
 
 
 
