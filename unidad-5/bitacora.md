@@ -61,20 +61,37 @@ struct.pack('>2h2B', xValue, yValue, int(aState), int(bState))
 ```
 Esto es un "molde" que define como se organizan los datos. Esto va a guardar 4 datos en un orden en especifico
 
-* > --> el orden
+* **> --> el orden**
   - "Big-endian" quiere decir, el byte más importante va primero
 
-* 2h --> Los dos primeros datos
+* **2h --> Los dos primeros datos**
   - Esta parte va a guardar dos números enteros (x, y)
   - Cada uno ocupa dos bytes y pueden ser positivos o negativos
   - Recordemos que esto quiere decir un punto en el canvas
 
-* 2B --> los botones
+* **2B --> los botones**
   - Va a guardar dos tados de un solo digito (A y B)
   - Cada uno ocupa un byte
   - Solo puede ser 0 o 1. 0 cuando no esta siendo presionado y 1 cuando lo está
 
-En resumen, '>2h2B' **hola**
+En resumen, **'>2h2B'** guarda los datos en un orden determinado
+1. x (2 bytes)
+
+2. y (2 bytes)
+
+3. botón A (1 byte)
+
+4. botón B (1 byte)
+
+#### Tamaño variable
+* El ASCII puede variar, ejemplo:
+  ```
+  "500,524,True,False\n" → ~19 bytes
+  ```
+* El Binario es SIEMPRE **6 bytes**
+  ```
+  x (2) + y (2) + A (1) + B (1) = 6 bytes SIEMPRE
+  ```
 
 
 
