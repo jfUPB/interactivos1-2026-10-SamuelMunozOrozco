@@ -584,9 +584,9 @@ class MicrobitBinaryAdapter extends BaseAdapter {
 module.exports = MicrobitBinaryAdapter;
 ```
 
-##### Que se cambio en el codigo
+##### Que se quito en el codigo
 
-###### 1. Primero eliminamos la siguiente funcion
+###### 1. Eliminamos la siguiente funcion
 ```js
 function parseCsvLine(line) {
   console.log("Data arrives");
@@ -610,8 +610,104 @@ function parseCsvLine(line) {
 
 * La eliminamos porque lo que hace es procesar datos en formato ASCII se parado por comas, en este nuevo adapter, los datos no estan en ese formato, por lo que ya no nos sirve esta funcion
 
+###### 2. Eliminamos la siguiente linea en _onChunk
+```js
+this.buf += chunk.toString("utf8");
+```
+* Lo que hace es convertir bytes a texto
+* Como binario no es texto, no lo necesitamos
 
 
+###### 3. Eliminamos el siguiente bloque
+```js
+let idx;
+while ((idx = this.buf.indexOf("\n")) >= 0) {
+  const line = this.buf.slice(0, idx).trim();
+  this.buf = this.buf.slice(idx + 1);
+
+  if (!line) continue;
+
+  try {
+    const parsed = parseCsvLine(line);
+    this.onData?.(parsed);
+  } catch (e) {
+    if (e instanceof ParseError) {
+      if (this.verbose) console.log("Bad data:", e.message, "raw:", line);
+    } else {
+      this._fail(e);
+    }
+  }
+}
+```
+
+* Lo que hace es esperar las lineas que tengan al final "\n" lo que significa que es donde la linea termina
+* Lo eliminamos porque solo funciona en ASCII y en binario no existe "\n"
+* Ahora usamos "**0xAA (header)**"
+
+
+##### Que se cambio en el codigo
+
+###### 1. Cambiamos el buffer
+Antes:
+```js
+this.buf = "";
+```
+* El "buffer" es una **memoria temporal** donde se guardan los datos que llegan. Y tiene ese "**="";**" ya que se trabaja con texto (**ASCII**)
+* Ejemplo: "500,524,true,false\n". Esto es un **string**
+-
+
+Despues:
+```js
+this.buf = Buffer.alloc(0);
+```
+* Se crea un "buffer" vacio, por eso el "(0)", porque aun no tiene datos
+* Cuando llegan datos: "this.buf = Buffer.concat([this.buf, chunk]);". Ahora si el buffer crece
+* Cada vez que se hace "this.buf = Buffer.alloc(0);". Se borran los datos viejos 
+
+
+###### Ahora si agregamos la logica del framing
+```js
+_onChunk(chunk) {
+  this.buf = Buffer.concat([this.buf, chunk]);
+
+  while (this.buf.length >= 8) {
+
+    if (this.buf[0] !== 0xAA) {
+      this.buf = this.buf.slice(1);
+      continue;
+    }
+
+    if (this.buf.length < 8) {
+      return;
+    }
+
+    const packet = this.buf.slice(0, 8);
+
+    const data = packet.slice(1, 7);
+    let calcChk = 0;
+    for (let i = 0; i < data.length; i++) {
+      calcChk += data[i];
+    }
+    calcChk = calcChk % 256;
+
+    const recvChk = packet[7];
+
+    if (calcChk !== recvChk) {
+      this.buf = this.buf.slice(1);
+      continue;
+    }
+
+    const x = packet.readInt16BE(1);
+    const y = packet.readInt16BE(3);
+    const btnA = packet[5] === 1;
+    const btnB = packet[6] === 1;
+
+    this.onData?.({ x, y, btnA, btnB });
+
+    this.buf = this.buf.slice(8);
+  }
+}
+```
 
  
 
