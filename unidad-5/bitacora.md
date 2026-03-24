@@ -729,7 +729,127 @@ _onChunk(chunk) {
 ```
 Que hace el codigo
 
-######
+###### 1. Acumular los bytes
+```js
+this.buf = Buffer.concat([this.buf, chunk]);
+```
+* Si tienes ya una parte de los bytes y legan otros, los junta en un solo paquete
+Ejemplo:
+
+Antes:
+```
+buf = [AA 01]
+chunk = [F4 02]
+```
+
+Despues:
+```
+buf = [AA 01 F4 02]
+```
+
+###### 2. Procesar si hay suficiente informacion
+```js
+while (this.buf.length >= 8)
+```
+* Solo funciona si tiene 8 bytes, o sea, un paquete completo
+
+
+###### 3. Busca el header (0xAA)
+```js
+if (this.buf[0] !== 0xAA) {
+  this.buf = this.buf.slice(1);
+  continue;
+}
+```
+* Verifica si el primer byte es el inicio del paquete
+* Si NO es 0xAA, elimina ese byte:
+```js
+this.buf = this.buf.slice(1);
+```
+* Esto se hace por si los datos que llegan esta desalineado, por si el primer byte que se lee no es el header
+
+
+###### 4. Verifica el tamaño
+```js
+if (this.buf.length < 8) {
+  return;
+}
+```
+* Si no tiene los 8 bytes, pues espera a que se completen
+* Es una medida de seguridad
+
+
+###### 5. Extraer paquete
+```js
+const packet = this.buf.slice(0, 8);
+```
+* Toma los primeros 8 bytes como un paquete
+
+
+###### 6. Calcular el checksum
+```js
+const data = packet.slice(1, 7);
+let calcChk = 0;
+for (let i = 0; i < data.length; i++) {
+  calcChk += data[i];
+}
+calcChk = calcChk % 256;
+```
+-
+```js
+const data = packet.slice(1, 7);
+```
+* Toma una parte del paquete, o sea, los datos que van al checksum , del x al B
+
+-
+```js
+let calcChk = 0;
+```
+* Inicializa el checksum en cero
+
+-
+```js
+for (let i = 0; i < data.length; i++) {
+  calcChk += data[i];
+}
+```
+* Recorre cada byte y lo suma
+* Reduce el numero a un valor entre 0 y 255
+* Ejemplo:
+  - 260 % 256 = 4
+  - Porque el checksum 1 byte
+
+###### 7. validar el checksum
+```js
+if (calcChk !== recvChk) {
+  if (this.verbose) {
+    console.warn("Checksum incorrecto, descartando paquete:", packet);
+  }
+  this.buf = this.buf.slice(1);
+  continue;
+}
+```
+1. Compara el checksum que calculamos y el que venia en el paquete
+```js
+if (calcChk !== recvChk)
+```
+
+2. Muestra un mensaje en consola si hay error
+```js
+if (this.verbose) {
+  console.warn("Checksum incorrecto, descartando paquete:", packet);
+}
+```
+
+3. Elimina solo el primer byte, por si el header no esta al frente del paquete
+```js
+this.buf = this.buf.slice(1);
+```
+
+4. Salta al siguiente ciclo while. Lo que hace es ingnorar el paquete que este mal y revisa el siguiente
+```js
+continue;
+```
 
 
  
