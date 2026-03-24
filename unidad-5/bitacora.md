@@ -852,6 +852,19 @@ continue;
 ```
 
 
+###### 8. Parsear datos
+```js
+const x = packet.readInt16BE(1);
+const y = packet.readInt16BE(3);
+const btnA = packet[5] === 1;
+const btnB = packet[6] === 1;
+```
+
+1. Lee el valor de X desde el paquete
+```js
+const x = packet.readInt16BE(1);
+```
+
  
 
 
