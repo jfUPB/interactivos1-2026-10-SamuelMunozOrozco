@@ -288,15 +288,16 @@ while True:
 * El receptor solo interpreta **0xAA** como header cuando esta en el inicio del paquete. Entonces si hay un falso header en los datos, el checksum no coincidiria y deja ver el error, descartando asi el paquete corrupto
 
 
+
+
 ## Bitácora de aplicación 
 
-### Actividad 2
 Tenemos que adaptar otra vez el sistema que ya tenemos a un nuevo hardware sin dañar la estructura base del sistema. Este nuevo hardware lo que hace es traducir los datos en binario  mandados por el microbit
 
-#### Que teniamos que hacer
+### Que teniamos que hacer
 * Copiamos y pegamos el adapter que ya teniamos en uno nuevo llamado "MicrobitBinaryAdapter"
 
-#### Codigo original del adapter
+### Codigo original del adapter
 ```js
 const { SerialPort } = require("serialport");
 const BaseAdapter = require("./BaseAdapter");
@@ -433,7 +434,7 @@ module.exports = MicrobitAsciiAdapter;
 
 ```
 
-#### Codigo adaptado a binario
+### Codigo adaptado a binario
 ```js
 const { SerialPort } = require("serialport");
 const BaseAdapter = require("./BaseAdapter");
@@ -584,9 +585,9 @@ class MicrobitBinaryAdapter extends BaseAdapter {
 module.exports = MicrobitBinaryAdapter;
 ```
 
-##### Que se quito en el codigo
+#### Que se quito en el codigo
 
-###### 1. Eliminamos la siguiente funcion
+##### 1. Eliminamos la siguiente funcion
 ```js
 function parseCsvLine(line) {
   console.log("Data arrives");
@@ -610,7 +611,7 @@ function parseCsvLine(line) {
 
 * La eliminamos porque lo que hace es procesar datos en formato ASCII se parado por comas, en este nuevo adapter, los datos no estan en ese formato, por lo que ya no nos sirve esta funcion
 
-###### 2. Eliminamos la siguiente linea en _onChunk
+##### 2. Eliminamos la siguiente linea en _onChunk
 ```js
 this.buf += chunk.toString("utf8");
 ```
@@ -618,7 +619,7 @@ this.buf += chunk.toString("utf8");
 * Como binario no es texto, no lo necesitamos
 
 
-###### 3. Eliminamos el siguiente bloque
+##### 3. Eliminamos el siguiente bloque
 ```js
 let idx;
 while ((idx = this.buf.indexOf("\n")) >= 0) {
@@ -645,9 +646,9 @@ while ((idx = this.buf.indexOf("\n")) >= 0) {
 * Ahora usamos "**0xAA (header)**"
 
 
-##### Que se cambio en el codigo
+#### Que se cambio en el codigo
 
-###### 1. Cambiamos el buffer
+##### 1. Cambiamos el buffer
 Antes:
 ```js
 this.buf = "";
@@ -665,49 +666,71 @@ this.buf = Buffer.alloc(0);
 * Cada vez que se hace "this.buf = Buffer.alloc(0);". Se borran los datos viejos 
 
 
-###### Ahora si agregamos la logica del framing
+##### Ahora si agregamos la logica del framing en _onChunk
 ```js
 _onChunk(chunk) {
-  this.buf = Buffer.concat([this.buf, chunk]);
+    // 1. Acumular bytes
+    this.buf = Buffer.concat([this.buf, chunk]);
 
-  while (this.buf.length >= 8) {
+    // 2. Procesar mientras haya suficiente información
+    while (this.buf.length >= 8) {
 
-    if (this.buf[0] !== 0xAA) {
-      this.buf = this.buf.slice(1);
-      continue;
+      // 3. Buscar header (0xAA)
+      if (this.buf[0] !== 0xAA) {
+        this.buf = this.buf.slice(1);
+        continue;
+      }
+
+      // 4. Verificar tamaño mínimo
+      if (this.buf.length < 8) {
+        return;
+      }
+
+      // 5. Extraer paquete
+      const packet = this.buf.slice(0, 8);
+
+      // 6. Calcular checksum
+      const data = packet.slice(1, 7);
+      let calcChk = 0;
+      for (let i = 0; i < data.length; i++) {
+        calcChk += data[i];
+      }
+      calcChk = calcChk % 256;
+
+      const recvChk = packet[7];
+
+      // 7. Validar checksum
+      if (calcChk !== recvChk) {
+        if (this.verbose) {
+          console.warn("Checksum incorrecto, descartando paquete:", packet);
+        }
+        this.buf = this.buf.slice(1);
+        continue;
+      }
+
+      // 8. Parsear datos
+      const x = packet.readInt16BE(1);
+      const y = packet.readInt16BE(3);
+      const btnA = packet[5] === 1;
+      const btnB = packet[6] === 1;
+
+      // 9. Emitir datos
+      this.onData?.({ x, y, btnA, btnB });
+
+      // 10. Eliminar paquete procesado
+      this.buf = this.buf.slice(8);
     }
 
-    if (this.buf.length < 8) {
-      return;
+    // 11. Evitar crecimiento infinito
+    if (this.buf.length > 4096) {
+      this.buf = Buffer.alloc(0);
     }
-
-    const packet = this.buf.slice(0, 8);
-
-    const data = packet.slice(1, 7);
-    let calcChk = 0;
-    for (let i = 0; i < data.length; i++) {
-      calcChk += data[i];
-    }
-    calcChk = calcChk % 256;
-
-    const recvChk = packet[7];
-
-    if (calcChk !== recvChk) {
-      this.buf = this.buf.slice(1);
-      continue;
-    }
-
-    const x = packet.readInt16BE(1);
-    const y = packet.readInt16BE(3);
-    const btnA = packet[5] === 1;
-    const btnB = packet[6] === 1;
-
-    this.onData?.({ x, y, btnA, btnB });
-
-    this.buf = this.buf.slice(8);
   }
-}
 ```
+Que hace el codigo
+
+######
+
 
  
 
