@@ -861,9 +861,56 @@ const btnB = packet[6] === 1;
 ```
 
 1. Lee el valor de X desde el paquete
+   * Empieza en el byte 1
+   * Lee 2 bytes
+   * Los interpreta como numero con signo
+   * Usamos "readInt16BE(1)" ya que X ocupa 2 bytes, no 1
 ```js
 const x = packet.readInt16BE(1);
 ```
+
+2. Lee el valor de Y desde el paquete
+   * Empieza en 3 porque:
+     ```
+     [1-2] → X  
+     [3-4] → Y  
+     ```
+     *  Usamos "readInt16BE(1)" ya que Y ocupa 2 bytes, no 1
+```js
+const y = packet.readInt16BE(3);
+```
+
+3. Lee el estado del boton A
+```js
+const btnA = packet[5] === 1;
+```
+
+4. Lee el estado del boton B
+```js
+const btnB = packet[6] === 1;
+```
+
+
+###### 9. Emitir datos
+```js
+this.onData?.({ x, y, btnA, btnB });
+```
+* Envia los datos al sistema
+
+###### 10. Eliminar paquete procesado
+```js
+this.buf = this.buf.slice(8);
+```
+* Elimina el paquete que ya fue procesado. Una medida de seguridad pa que no se lea el mismo otra vez
+
+
+###### 11. Evitar crecimiento infinito
+```js
+if (this.buf.length > 4096) {
+  this.buf = Buffer.alloc(0);
+}
+```
+* Limpia el buffer si crece demasiado
 
  
 
