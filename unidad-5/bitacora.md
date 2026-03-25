@@ -1288,9 +1288,13 @@ while True:
 <img width="1919" height="1087" alt="image" src="https://github.com/user-attachments/assets/67102c72-35a2-451f-acf3-5fc6605941f8" />
 
 
-
-
-
-
-
 ## Bitácora de reflexión
+
+
+
+
+
+
+
+
+
