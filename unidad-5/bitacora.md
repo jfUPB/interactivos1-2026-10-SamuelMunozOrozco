@@ -1305,6 +1305,15 @@ while True:
 * Depuracion: Dificil, los bytes no son legibles
 
 
+### 2. ¿Por qué la arquitectura desacoplada (patrón Adapter + Bridge + FSM) te permite añadir soporte para un protocolo completamente diferente sin modificar el frontend (sketch.js) ni el transporte (bridgeClient.js)?
+* La arquitectura desacoplada consite en que cada parte del sistema cumple una responsabilidad diferente
+* Podemos hacer cambios a otros protocolos sin dañar las otras partes del sistema ya que el Adapter cumple una funcion en especifico que es el de traducir datos, y solo se comunica con las otras partes si se cumple el contrato, sino, no se comunican y no afecta el funcionamiento de las demas
+
+
+### 3. ¿En qué situaciones del mundo real preferirías un protocolo binario sobre uno ASCII y viceversa? Justifica con ejemplos concretos.
+* El binario funcionaria mejor cuando necesito velocidad y bajo consumo, cuando se que cantidad exacta de datos van a llegar
+* Por ejemplo, en un videojuego. Todas las aciones que mandan, en formato ASCII quedaria muy largo y ocuparia mas ancho de banda, en cambio en binario, manda bytes puros y ocupa menos ancho de banda
+
 
 
 
