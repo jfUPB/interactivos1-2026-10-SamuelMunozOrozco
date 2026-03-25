@@ -1290,7 +1290,19 @@ while True:
 
 ## Bitácora de reflexión
 
+### ASCII (MicrobitV2Adapter)
+* Tamaño del paquete: Varia, puede ser entre 20 y 40 bytes
+* Framing: Delimitado por \n, que determina el final de la linea
+* Checksum: Suma los valores de los dstos que se mandan, en formato de texto
+* Complejidad del parser: Normal, separa los valores por medio de comas
+* Depuracion: Bien, se puede leer en consola
 
+### Binario (MicrobitBinaryAdapter)
+* Tamaño del paquete: Fijo, 8 Bytes
+* Framing: Usamos un header (0xAA), marca el inicio de cada paquete
+* Checksum: Suma los bytes, usamos %256 para que el resultado de esa suma lo pasemos a un byte
+* Complejidad del parser: Bastante complejo, necesiamos una logica completamente nueva en el _onChunk y no podemos usar el parse de referencia ya que en este caso no nos sirve
+* Depuracion: Dificil, los bytes no son legibles
 
 
 
