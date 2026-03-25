@@ -1174,7 +1174,7 @@ const MicrobitBinaryAdapter = require("./adapters/MicrobitBinaryAdapter");
 
 ###### 2. Agregamos el caso en "createAdapter()"
 ```js
-if (DEVICE === "microbitBinary") {
+if (DEVICE === "microbitbinary") {
   const path = SERIAL_PATH ?? await findMicrobitPort();
   if (!path) {
     log.error("micro:bit not found. Use --serialPort to specify manually.");
@@ -1185,6 +1185,86 @@ if (DEVICE === "microbitBinary") {
 }
 ```
 * Esta parte es para decidir que adapter usar, dependiendo de los datos que lleguen del microbit
+
+
+#### Prueba de que siguen funcionando los otros Adapters
+
+##### MicrobitAsciiAdapter (Parte Importante)
+```js
+function parseCsvLine(line) {
+  console.log("Data arrives");
+  const values = line.trim().split(",");
+  if (values.length !== 4) throw new ParseError(`Expected 4 values, got ${values.length}`);
+
+  const x = Number(values[0]);
+  const y = Number(values[1]);
+  const btnA = String(values[2]).trim().toLowerCase();
+  const btnB = String(values[3]).trim().toLowerCase();
+
+  if (!Number.isFinite(x) || !Number.isFinite(y)) throw new ParseError("Invalid numeric data");
+  if (x < -2048 || x > 2047 || y < -2048 || y > 2047) throw new ParseError("Out of expected range");
+  if (!["true", "false"].includes(btnA) || !["true", "false"].includes(btnB)) throw new ParseError("Invalid button data");
+
+  return { x: x | 0, y: y | 0, btnA: btnA === "true", btnB: btnB === "true" };
+}
+```
+
+###### Codigo microbit
+```py
+from microbit import *
+
+uart.init(115200)
+display.set_pixel(0,0,9)
+
+while True:
+    xValue = accelerometer.get_x()
+    yValue = accelerometer.get_y()
+    aState = button_a.is_pressed()
+    bState = button_b.is_pressed()
+    data = "{},{},{},{}\n".format(xValue, yValue, aState,bState)
+    uart.write(data)
+    sleep(100) # Envia datos a 10 Hz
+```
+
+###### Prueba de que se detecta el microbit
+<img width="718" height="106" alt="image" src="https://github.com/user-attachments/assets/83327dad-e50a-4304-b041-1098b42f9109" />
+
+###### Prueba de que se conecta al server y funciona
+<img width="1911" height="1142" alt="image" src="https://github.com/user-attachments/assets/2543377d-d16b-4617-9ec5-46b7c762c096" />
+
+##### MicrobitAscii2Adapter (Parte importante)
+```js
+function parseCsvLine(line) {
+
+  const values = line.trim().split("|");
+  if (values.length !== 6) throw new ParseError(`Expected 6 values, got ${values.length}`);
+
+  const x = Number(values[1].split(":")[1]);
+  const y = Number(values[2].split(":")[1]);
+  const btnA = Number(values[3].split(":")[1]);
+  const btnB = Number(values[4].split(":")[1]);
+  const chk = Number(values[5].split(":")[1]);
+
+  const calcChk = Math.abs(x) + Math.abs(y) + btnA + btnB;
+  if(calcChk !== chk)
+  {
+    throw new ParseError("Checksum no coincide");
+  }
+
+  if (!Number.isFinite(x) || !Number.isFinite(y)) throw new ParseError("Invalid numeric data");
+  if (x < -2048 || x > 2047 || y < -2048 || y > 2047) throw new ParseError("Out of expected range");
+  
+
+  return { x: x | 0, y: y | 0, btnA: btnA === 1, btnB: btnB === 1 };
+}
+```
+
+##### Codigo Microbit
+```py
+
+```
+
+
 
 
 
