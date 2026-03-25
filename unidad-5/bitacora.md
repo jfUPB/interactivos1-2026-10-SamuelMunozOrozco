@@ -1261,8 +1261,33 @@ function parseCsvLine(line) {
 
 ##### Codigo Microbit
 ```py
+from microbit import *
 
+uart.init(115200)
+display.set_pixel(0,0,9)
+
+while True:
+    xValue = accelerometer.get_x()
+    yValue = accelerometer.get_y()
+    aState = 1 if button_a.is_pressed() else 0
+    bState = 1 if button_b.is_pressed() else 0
+
+    t = running_time()
+
+    chk = abs(xValue) + abs(yValue) + aState + bState
+    
+    data = "$T:{}|X:{}|Y:{}|A:{}|B:{}|CHK:{}\n".format(t, xValue, yValue, aState, bState, chk)
+    uart.write(data)
+    sleep(100) # Envia datos a 10 Hz
 ```
+
+###### Prueba de que se conecta al Adapter
+<img width="932" height="101" alt="image" src="https://github.com/user-attachments/assets/8d585b67-a0f5-475a-88bf-13dd6608d8d3" />
+
+###### Prueba de que se conecta al server y funciona
+<img width="1919" height="1087" alt="image" src="https://github.com/user-attachments/assets/67102c72-35a2-451f-acf3-5fc6605941f8" />
+
+
 
 
 
