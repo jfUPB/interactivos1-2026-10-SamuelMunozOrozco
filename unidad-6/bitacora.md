@@ -570,7 +570,7 @@ draw()
 <br><br>
 
 ### 2. Compara las unidades 4, 5 y 6 en una tabla. Compara al menos:
-```md
+
 | Aspecto | Unidad 4 (ASCII) | Unidad 5 (Binario) | Unidad 6 (Strudel) |
 |--------|------------------|--------------------|--------------------|
 | Fuente de datos | micro:bit | micro:bit | Strudel |
@@ -579,7 +579,6 @@ draw()
 | Validación/control | parseCsvLine | checksum | estructura + timestamp |
 | Lugar de traducción | Adapter | Adapter | Adapter |
 | Papel del tiempo | inmediato | inmediato | basado en timestamp |
-🧠 CLAVE
 
 
 ### 3. Explica por qué esta unidad sigue perteneciendo a la misma arquitectura del curso, aunque la fuente de datos ya no sea hardware físico.
