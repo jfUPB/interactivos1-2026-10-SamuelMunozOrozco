@@ -10,6 +10,8 @@
 * Asegurarnos que cada parte del codigo cumpla su funcion. Que el **adapter** solo traduzca, se transporten esos datos correctamente por el **bridge** y se ejecuten en el frontend en el timing correcto, usando timestamps
 * 
 
+```
+```
 
 
 
