@@ -417,6 +417,154 @@ this._onData?.(...)
 ```
 * Pasa los datos al sketch
 
+<br><br>
+<br><br>
+
+### FRONTEND (StrudelSketch + FSM + Scheduling)
+
+#### 1. Recepcion de datos
+```js
+bridge.onData((data) => {
+  if (data.type === "strudel") {
+    task.postEvent({
+      type: EVENTS.DATA,
+      payload: data
+    });
+  }
+});
+```
+* El frontend recibe los datos del bridge y los convierte en eventos FSM
+
+#### 2. FSM (StrudelTask)
+```js
+class StrudelTask extends FSMTask
+```
+* Maneja la logica del sistema
+* Antes solo llegaba el dato y dibujaba
+* Ahora es evento -> cola -> ejecucion -> dibujo
+
+#### 3. Event queue (lo nuevo)
+```js
+this.eventQueue.push({
+  timestamp,
+  sound,
+  delta
+});
+```
+* Esta es la cola de eventos, donde se guardan
+
+#### 4. Scheduling
+```js
+while (eventQueue.length > 0 && now >= timestamp)
+```
+* Se encarga de ejecutar los eventos cuando corresponde
+
+#### 5. Active Animations
+```js
+activeAnimations.push(...)
+```
+* Son las listas de animaciones
+
+##### 6. Render
+```js
+dibujarElemento(anim, progress);
+```
+* Simplemente se encarga de las visuales
+
+### Respuesta puntos bitacora
+
+#### Qué estructura final de mensaje decidiste usar
+```js
+{
+  type: "strudel",
+  timestamp: number,
+  payload: {
+    s: string,
+    delta: number
+  }
+}
+```
+* Usamos un formato normalizado
+* Separa el tipo de fuente
+* incluye el timepo
+* Encapsula los datos relevantes
+
+#### Cómo conectaste bridgeClient.js, FSMTask, updateLogic y drawRunning
+Este fue el flujo
+```
+bridge → BridgeClient → FSMTask → updateLogic → draw()
+```
+
+<br><br>
+1. Primero el CridgeClient recibe datos
+```js
+bridge.onData((data) => {
+```
+* Los datos que llegan del servidor
+
+<br><br>
+2. Se envian a la FSM
+```js
+task.postEvent({
+  type: EVENTS.DATA,
+  payload: data
+});
+```
+* Convierte los datos en eventos
+
+<br><br>
+3. FSM procesa los eventos
+```js
+estado_corriendo → updateLogic(data)
+```
+
+<br><br>
+4. updateLogic guarda en cola 
+```js
+this.eventQueue.push(...)
+```
+* Almacena los eventos
+
+<br><br>
+5. draw ejecuta y renderiza
+```js
+draw() → scheduling → animaciones → render
+```
+* Ocurren todas las visuales
+
+#### Cómo separaste recepción, cola temporal y renderizado
+
+1. Recepcion
+```js
+bridge.onData(...)
+```
+* Recibe los datos
+
+<br><br>
+2. Cola temporal
+```js
+updateLogic()
+```
+* Guarda los eventos en:
+```js
+eventQueue
+```
+* Ordenados por el tiempo
+
+<br><br>
+3. Renderizado
+```js
+draw()
+```
+* Hace el Scheduling
+* Animacion
+* Dibujo
+
+
+
+
+
+
 
 <br><br>
 <br><br>
