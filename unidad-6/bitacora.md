@@ -283,6 +283,94 @@ Despues de convertir los datos:
 <br><br>
 
 ### Cambios en el bridgeServer
+```js
+ //===============Nuevo servidor para Strudel================
+const wssStrudel = new WebSocketServer({ port: 8080 });
+
+log.info(`Strudel WS listening on ws://127.0.0.1:8080`);
+
+wssStrudel.on("connection", (ws) => {
+  log.info("[STRUDEL] Connected");
+
+  ws.on("message", (raw) => {
+    const msg = safeJsonParse(raw.toString("utf8"));
+    if (!msg) return;
+
+    // 🔥 pasar al adapter (NO lógica aquí)
+    adapter.handleIncoming(msg);
+  });
+
+  ws.on("close", () => {
+    log.info("[STRUDEL] Disconnected");
+  });
+});
+
+  // =========================================================
+
+```
+
+#### 1. Creamos un nuevo servidor para Strudel
+```js
+const wssStrudel = new WebSocketServer({ port: 8080 });
+```
+* Antes solo teniamos que el bridge de una pasaba al frontend (8081)
+* Ahora pimero va Strudel, luego siguie el bridge (8080) y luego sigue ahora si el frontend (8081)
+* Estamos creando una nueva puerta para los datos
+* (Preguntale a chat porque se creo un setrvidor nuevo dentro del bridgeServer, y porque no se hizo algo parecido con los adapter. Y tambien si esto fue implementado po chat como una solucion al problema de que no me funcionaba el sistema y si antes de eso era diferente y mas simple. Explicame porque lo hiciste)
+
+#### 2. Detectar cuando Strudel se conecta
+```js
+wssStrudel.on("connection", (ws) => {
+  log.info("[STRUDEL] Connected");
+```
+* Detecta cuando Strudel se conecta
+
+#### 3. Recibe mensajes
+```js
+ws.on("message", (raw) => {
+  const msg = safeJsonParse(raw.toString("utf8"));
+```
+* Recibe los mensajes y los convierte a JSON usable
+* (pregunale a chat si esto esta bien, porque no pues que el bridge no ponia hacer nada que tuviera que ver con traducir datos y eso?)
+
+#### 4. Pasar los datos a el adapter
+```js
+adapter.handleIncoming(msg);
+```
+* El bridge le pasa los datos al adapter (Preguntale a chat, si esto lo que quiere decir es que primero llegan los datos de Strudel, bridgeserver los guarda y luego se los pasa a adapter para traducirlos, o no es bridgeserver sino el nuevo que se creo dentro del mismo y si es asi, porque no se mantiene la logica de que el adapter es a quien le llegan los datos, el bridgeserver los recibe y luego los manda al frontend)
+
+#### 5. Envio de datos al Frontend
+```js
+adapter.onData = (d) => {
+  if (DEVICE === "strudel") {
+    broadcast(wss, d);
+  }
+};
+```
+* Aqui el adapter ya creo los datos limpios y el bridge solo los envia al frontend
+
+#### 6. Diferencias con el microbit
+```js
+ if (DEVICE.startsWith("microbit") || DEVICE === "sim") {
+      broadcast(wss, {
+        type: "microbit",
+        x: d.x,
+        y: d.y,
+        btnA: !!d.btnA,
+        btnB: !!d.btnB,
+        t: nowMs(),
+      });
+      return;
+    }
+```
+* El microbit necesitaba transformar los datos primero (que chat explique mejor esto, porque los datos no venian ya transformados en el adapter??)
+* En cambio en Strudel ya vienen normalizados
+```js
+broadcast(wss, d);
+```
+
+
+
 
 
 
