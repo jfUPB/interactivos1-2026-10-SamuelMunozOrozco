@@ -316,7 +316,6 @@ const wssStrudel = new WebSocketServer({ port: 8080 });
 * Antes solo teniamos que el bridge de una pasaba al frontend (8081)
 * Ahora pimero va Strudel, luego siguie el bridge (8080) y luego sigue ahora si el frontend (8081)
 * Estamos creando una nueva puerta para los datos
-* (Preguntale a chat porque se creo un setrvidor nuevo dentro del bridgeServer, y porque no se hizo algo parecido con los adapter. Y tambien si esto fue implementado po chat como una solucion al problema de que no me funcionaba el sistema y si antes de eso era diferente y mas simple. Explicame porque lo hiciste)
 
 #### 2. Detectar cuando Strudel se conecta
 ```js
@@ -331,13 +330,12 @@ ws.on("message", (raw) => {
   const msg = safeJsonParse(raw.toString("utf8"));
 ```
 * Recibe los mensajes y los convierte a JSON usable
-* (pregunale a chat si esto esta bien, porque no pues que el bridge no ponia hacer nada que tuviera que ver con traducir datos y eso?)
 
 #### 4. Pasar los datos a el adapter
 ```js
 adapter.handleIncoming(msg);
 ```
-* El bridge le pasa los datos al adapter (Preguntale a chat, si esto lo que quiere decir es que primero llegan los datos de Strudel, bridgeserver los guarda y luego se los pasa a adapter para traducirlos, o no es bridgeserver sino el nuevo que se creo dentro del mismo y si es asi, porque no se mantiene la logica de que el adapter es a quien le llegan los datos, el bridgeserver los recibe y luego los manda al frontend)
+* El bridge le pasa los datos al adapter 
 
 #### 5. Envio de datos al Frontend
 ```js
@@ -369,11 +367,58 @@ adapter.onData = (d) => {
 broadcast(wss, d);
 ```
 
+##### Preguntas
+
+¿Por qué el bridge NO debería procesar los datos de Strudel?
+* R/= Para asi repartir mejor las responsabilidades entre transporte y procesamiento de datos
+
+<br><br>
+
+¿Por qué se creó un nuevo servidor dentro del bridgeServer?
+* R/= Porque tenemos dos fuentes distintas de conexion
+* Antes teniamos solo frontend -> bridge (8081). Ahora tenemos Strudel -> bridge (8080) -> frontend -> bridge (8081)
+* Sigue siendo el mismo bridge, pero con dos entradas
+
+<br><br>
+
+¿Qué pasaría si el adapter manejara WebSockets directamente?
+* Se romperia la arqutectura, tendria una responsabilidad que no le corresponde
+
+<br><br>
+
+¿Por qué es importante que el bridge no almacene datos?
+* Porque el d=bridge solo deberia pasar los datos
+
+<br><br>
+<br><br>
+
+### Cmabios en el bridgeClient
+* El bridgeClient es quien recibe los datos en el frontend
+* Antes sol oentendia mensajes del microbit:
+```js
+if (msg.type === "microbit") {
+  this._onData?.(msg);
+}
+```
+
+<br><br>
+* Ahora se agrega mensajes de Strudel:
+```js
+ // 🟣 strudel
+       if (msg.type === "strudel") {
+        this._onData?.(msg);
+       }
+```
+* Detecta que el mensaje viene de Strudel
+
+<br><br>
+```js
+this._onData?.(...)
+```
+* Pasa los datos al sketch
 
 
-
-
-
+<br><br>
 <br><br>
 
 ## Bitácora de reflexión
