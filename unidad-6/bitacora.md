@@ -570,7 +570,7 @@ draw()
 <br><br>
 
 ### 2. Compara las unidades 4, 5 y 6 en una tabla. Compara al menos:
-```md
+```
 | Aspecto | Unidad 4 (ASCII) | Unidad 5 (Binario) | Unidad 6 (Strudel) |
 |--------|------------------|--------------------|--------------------|
 | Fuente de datos | micro:bit | micro:bit | Strudel |
