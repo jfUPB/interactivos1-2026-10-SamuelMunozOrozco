@@ -64,7 +64,7 @@ class StrudelAdapter extends BaseAdapter {
     const sound = params.s;
     const delta = params.delta || 0.25;
 
-    // 🔥 normalización (LO QUE TE PIDE EL CURSO)
+    // 🔥 normalización 
     const normalized = {
       type: "strudel",
       timestamp: msg.timestamp,
