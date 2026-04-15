@@ -296,7 +296,7 @@ wssStrudel.on("connection", (ws) => {
     const msg = safeJsonParse(raw.toString("utf8"));
     if (!msg) return;
 
-    // 🔥 pasar al adapter (NO lógica aquí)
+    // pasar al adapter (NO lógica aquí)
     adapter.handleIncoming(msg);
   });
 
