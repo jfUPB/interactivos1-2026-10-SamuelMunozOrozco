@@ -361,7 +361,7 @@ adapter.onData = (d) => {
       return;
     }
 ```
-* El microbit necesitaba transformar los datos primero (que chat explique mejor esto, porque los datos no venian ya transformados en el adapter??)
+* El microbit necesitaba transformar los datos primero, porque viene en un string sin orden
 * En cambio en Strudel ya vienen normalizados
 ```js
 broadcast(wss, d);
