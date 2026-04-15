@@ -56,7 +56,7 @@ class StrudelAdapter extends BaseAdapter {
 
     let params = {};
 
-    // 🔥 convertir array a objeto
+    //  convertir array a objeto
     for (let i = 0; i < msg.args.length; i += 2) {
       params[msg.args[i]] = msg.args[i + 1];
     }
@@ -64,7 +64,7 @@ class StrudelAdapter extends BaseAdapter {
     const sound = params.s;
     const delta = params.delta || 0.25;
 
-    // 🔥 normalización 
+    //  normalización 
     const normalized = {
       type: "strudel",
       timestamp: msg.timestamp,
@@ -88,7 +88,7 @@ class StrudelAdapter extends BaseAdapter {
 
     let data = {};
 
-    // 🔥 Igual que en microbit: transformamos datos
+    //  Igual que en microbit: transformamos datos
     for (let i = 0; i < msg.args.length; i += 2) {
       const key = msg.args[i];
       const value = msg.args[i + 1];
@@ -296,7 +296,7 @@ wssStrudel.on("connection", (ws) => {
     const msg = safeJsonParse(raw.toString("utf8"));
     if (!msg) return;
 
-    // pasar al adapter (NO lógica aquí)
+    // pasar al adapter 
     adapter.handleIncoming(msg);
   });
 
@@ -404,7 +404,7 @@ if (msg.type === "microbit") {
 <br><br>
 * Ahora se agrega mensajes de Strudel:
 ```js
- // 🟣 strudel
+ //  strudel
        if (msg.type === "strudel") {
         this._onData?.(msg);
        }
