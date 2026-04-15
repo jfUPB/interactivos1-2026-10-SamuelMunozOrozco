@@ -561,12 +561,54 @@ draw()
 * Dibujo
 
 
-
-
-
-
-
-<br><br>
 <br><br>
 
 ## Bitácora de reflexión
+
+<img width="916" height="501" alt="image" src="https://github.com/user-attachments/assets/ab91ce38-1bd5-41a4-8d4a-2d330398c422" />
+
+<br><br>
+
+### 2. Compara las unidades 4, 5 y 6 en una tabla. Compara al menos:
+```md
+| Aspecto | Unidad 4 (ASCII) | Unidad 5 (Binario) | Unidad 6 (Strudel) |
+|--------|------------------|--------------------|--------------------|
+| Fuente de datos | micro:bit | micro:bit | Strudel |
+| Formato del mensaje | CSV | binario | JSON + args |
+| Problema principal | parsing | bytes | timing |
+| Validación | parseo | checksum | estructura + timestamp |
+| Traducción | adapter | adapter | adapter |
+| Tiempo | inmediato | inmediato | sincronizado |
+```
+
+
+### 3. Explica por qué esta unidad sigue perteneciendo a la misma arquitectura del curso, aunque la fuente de datos ya no sea hardware físico.
+* Porque a pesar que cambiamos de donde provienen los datos, que ya no son de una fuente directamente conectada al computador que era con el microbit, seguimos usando la misma estructura
+* Tenemos bien definidas en el codigo las responsabilidades, cada una esta separada de la otra y cumple la funcion que se le dio, ninguna hace algo de otra funcion ni nada por el estilo, y eso se mantiene por todo el proyecto como parte de un contrato
+* Mantenemos el uso de adapter, para transformar los datos que lleguen al sistema y tenerlos en un formato organizado y facil de leer por el sistema
+
+### 4. Explica qué decisiones tomaste para traducir eventos musicales en visualidad. Justifica por qué tu mapeo visual tiene sentido.
+* tr909bd -> círculo (bombo) -- Lo uso para los graves al ser grande y esta en el centro
+* tr909sd -> rectángulo horizontal (caja) -- La caja es un golpe lineal
+* tr909hh / oh -> cuadrados pequeños (hi-hats) -- Son hi-hats, son rapidos y por eso se ponen como elementos pequeños que salen dispersos en la pantalla
+
+### 5. Si tuvieras que integrar una tercera aplicación en el futuro, ¿Qué partes de tu arquitectura actual conservarías y cuáles cambiarías?
+* Conservaria la misma jerarquia que llevamos usando a lo largo del curso
+  - Adapter (Traduce los datos)
+  - bridgeServer (transporta los datos)
+  - bridgeClient (recibe los datos y conecta al servidor)
+  - FSM (Organiza los estados de los eventos y su orden)
+  - eventQueue (Por si los datos que llegan deben ejecutarse en un momento predeterminado, eso evitaria que se viera raro o con delay en pantalla)
+
+
+
+
+
+
+
+
+
+
+
+
+
