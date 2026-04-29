@@ -1176,6 +1176,76 @@ En general, los address que se les asignan es para que se sepa que widget esta m
 
 ## Bitácora de reflexión
 
+### Diagrama de Flujo
+
+```
+ ┌────────────────────┐
+│      Strudel       │
+│ Eventos musicales  │
+└─────────┬──────────┘
+          │
+          ▼
+┌────────────────────┐
+│  StrudelAdapter    │
+│ Normalización      │
+└─────────┬──────────┘
+          │
+          │
+          ▼
+┌────────────────────┐
+│  bridgeServer.js   │◄────────────────────┐
+│ Transporte WS      │                     │
+└─────────┬──────────┘                     │
+          │                                │
+          │ WebSocket                      │ UDP / OSC
+          ▼                                │
+┌────────────────────┐                     │
+│  bridgeClient.js   │                     │
+│ Recepción frontend │                     │
+└─────────┬──────────┘                     │
+          │                                │
+          ▼                                │
+┌────────────────────┐                     │
+│      FSMTask       │                     │
+│ Organización       │                     │
+└─────────┬──────────┘                     │
+          │                                │
+          ▼                                │
+┌────────────────────┐                     │
+│    updateLogic     │                     │
+│ Actualización      │                     │
+│ del estado         │                     │
+└───────┬─────┬──────┘                     │
+        │     │                            │
+        ▼     ▼                            │
+┌──────────┐ ┌────────────────┐            │
+│eventQueue│ │ controlState   │            │
+│Eventos   │ │ Estado persist │            │
+└────┬─────┘ └──────┬─────────┘            │
+     │              │                      │
+     └──────┬───────┘                      │
+            ▼                              │
+┌────────────────────┐                     │
+│    drawRunning     │                     │
+│ Render visual      │                     │
+└────────────────────┘                     │
+                                           │
+                                           │
+                            ┌──────────────┴─────────────┐
+                            │ Open Stage Control         │
+                            │ Controles persistentes OSC │
+                            └──────────────┬─────────────┘
+                                           │
+                                           ▼
+                            ┌────────────────────────────┐
+                            │ OpenStageControlAdapter    │
+                            │ Normalización OSC          │
+                            └────────────────────────────┘
+```
+
+
+### Tabla comparativa de fuente de datos
+
 | Aspecto | Unidad 4 (ASCII) | Unidad 5 (Binario) | Unidad 6 (Strudel) | Unidad 7 (Open Stage Control) |
 |---|---|---|---|---|
 | Fuente de datos | micro:bit | micro:bit | Strudel | Open Stage Control |
@@ -1186,6 +1256,43 @@ En general, los address que se les asignan es para que se sepa que widget esta m
 | Lugar de traducción | Adapter | Adapter | Adapter | Adapter |
 | Papel del tiempo | inmediato | inmediato | basado en timestamp | persistente |
 | Relación con el estado | estado inmediato | estado inmediato | eventos efímeros | estado persistente |
+
+
+### Explica por qué Open Stage Control no debe tratarse igual que Strudel dentro de la arquitectura
+
+Porque primero, dan datos completamente diferente. Strudel manda eventos musicales que estan temporizados, cada mensaje es una accion o evento que tiene que suceder en un momento exacto y estos momentos tienen que estar controlados dentro del sistema, porque si no pueden ahaber desfaces o delays con las animaciones. En cambio OpenSategControl no produce eventos, sino parametros o cambios en tiempo real con las animaciones, no dependen del tiempo o de algun tipo de timing, es un cambio que se mantiene mientras la sesion este abierta o se realice otro cambio
+
+
+### Si tuvieras que integrar una tercera fuente de control en el futuro, ¿Qué partes de tu arquitectura actual conservarías y cuáles extenderías?
+
+Las que mantendria
+
+* bridgeServer y bridgeClient
+* FSM
+* updatelogic
+* Separacion de eventos temporales y estado persistente
+
+<br><br>
+
+Las que agregaria
+
+* Un nuevo adapter, pa una nueva fuente de datos
+* Cambios en las visuales, los sketchs si son necesarios
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
