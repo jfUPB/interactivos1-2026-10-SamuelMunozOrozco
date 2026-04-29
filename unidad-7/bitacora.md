@@ -520,7 +520,7 @@ strudelAdapter.onData = (data) => {
   broadcast(wss, data);
 };
 
-// 🎛 OSC
+//  OSC
 oscAdapter.onData = (data) => {
   broadcast(wss, data);
 };
@@ -670,7 +670,7 @@ if (msg.type === "strudel") {
   return;
 }
 
-// 🎛 OSC (NUEVO)
+//  OSC (NUEVO)
 if (msg.type === "osc") {
   this._onData?.(msg);
   return;
@@ -719,7 +719,7 @@ class StrudelTask extends FSMTask {
 
     updateLogic(data) {
 
-    // 🎵 EVENTOS STRUDEL (TIEMPO)
+    //  EVENTOS STRUDEL (TIEMPO)
     if (data.type === "strudel") {
         this.eventQueue.push({
             timestamp: data.timestamp,
@@ -730,7 +730,7 @@ class StrudelTask extends FSMTask {
         this.eventQueue.sort((a, b) => a.timestamp - b.timestamp);
     }
 
-    // 🎛 CONTROLES OSC (ESTADO PERSISTENTE)
+    //  CONTROLES OSC (ESTADO PERSISTENTE)
     if (data.type === "osc") {
         const addr = data.payload.address;
         const args = data.payload.args;
@@ -758,7 +758,7 @@ function setup() {
    bridge.onData((data) => {
   console.log("DATA RECIBIDA:", data);
 
-  // 🎵 Strudel + 🎛 OSC
+  //  Strudel +  OSC
   if (data.type === "strudel" || data.type === "osc") {
     task.postEvent({
       type: EVENTS.DATA,
@@ -772,10 +772,10 @@ function setup() {
 
 function draw() {
 
-    // 🔥 SIEMPRE actualizar FSM y eventos
+    // Se encraga de siempre actualizar FSM y los eventos
     task.update();
 
-    // 🎛 Toggle OFF
+    // Toggle OFF
     if (task.controlState.toggle !== undefined && task.controlState.toggle === 0) {
         background(0);
         return;
@@ -849,7 +849,7 @@ function dibujarElemento(anim, p) {
 
 function dibujarBombo(p, c) {
 
-    // 🎛 tamaño controlado por OSC
+    // tamaño controlado por OSC
     let maxSize = task.controlState.size || 600;
 
     let d = lerp(100, maxSize, p);
@@ -896,7 +896,7 @@ function dibujarDefault(anim, p, c) {
 
 function getColorForSound(s) {
 
-    // 🎛 OSC controla el color del bombo
+    //  OSC controla el color del bombo
     if (s === "tr909bd" && task.controlState.rgb_1) {
         return task.controlState.rgb_1.map(v => Number(v));
     }
@@ -947,7 +947,7 @@ constructor() {
 ```
 updateLogic(data) {
 
-    // 🎵 EVENTOS STRUDEL
+    //  EVENTOS STRUDEL
     if (data.type === "strudel") {
 
         this.eventQueue.push({
@@ -959,7 +959,7 @@ updateLogic(data) {
         this.eventQueue.sort((a, b) => a.timestamp - b.timestamp);
     }
 
-    // 🎛 CONTROLES OSC
+    // CONTROLES OSC
     if (data.type === "osc") {
 
         const addr = data.payload.address;
@@ -999,7 +999,7 @@ bridge.onData((data) => {
 
     console.log("DATA RECIBIDA:", data);
 
-    // 🎵 Strudel + 🎛 OSC
+    //  Strudel +  OSC
     if (data.type === "strudel" || data.type === "osc") {
 
         task.postEvent({
@@ -1048,7 +1048,7 @@ task.postEvent({
 ```
 function getColorForSound(s) {
 
-    // 🎛 OSC controla el color del bombo
+    // OSC controla el color del bombo
     if (s === "tr909bd" && task.controlState.rgb_1) {
         return task.controlState.rgb_1.map(v => Number(v));
     }
@@ -1090,7 +1090,7 @@ if (s === "tr909bd" && task.controlState.rgb_1)
 ```
 function dibujarBombo(p, c) {
 
-    // 🎛 tamaño controlado por OSC
+    // tamaño controlado por OSC
     let maxSize = task.controlState.size || 600;
 
     let d = lerp(100, maxSize, p);
@@ -1122,10 +1122,10 @@ lerp(100, maxSize, p)
 
 ```function draw() {
 
-    // 🔥 SIEMPRE actualizar FSM y eventos
+    // Se encraga de siempre actualizar FSM y los eventos
     task.update();
 
-    // 🎛 Toggle OFF
+    // Toggle OFF
     if (task.controlState.toggle !== undefined &&
         task.controlState.toggle === 0) {
 
