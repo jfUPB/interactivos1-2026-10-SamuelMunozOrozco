@@ -1042,6 +1042,8 @@ task.postEvent({
 #### Integracion de los widgets de OSC
 
 ##### Cambio de color (RGB)
+<img width="298" height="300" alt="image" src="https://github.com/user-attachments/assets/0fae2e84-7a12-4c62-a4ac-9da18de2a3fc" />
+
 
 ```
 function getColorForSound(s) {
@@ -1082,6 +1084,9 @@ if (s === "tr909bd" && task.controlState.rgb_1)
 
 ##### Slider - Size
 
+<img width="72" height="261" alt="image" src="https://github.com/user-attachments/assets/d51603f2-675a-4242-83f2-4c11b5fb2468" />
+
+
 ```
 function dibujarBombo(p, c) {
 
@@ -1112,6 +1117,9 @@ lerp(100, maxSize, p)
 
 ##### Toggle o Switch
 
+<img width="165" height="151" alt="image" src="https://github.com/user-attachments/assets/c72c269f-d6ce-455f-be73-bb6ca59459da" />
+
+
 ```function draw() {
 
     // 🔥 SIEMPRE actualizar FSM y eventos
@@ -1141,6 +1149,23 @@ task.update();
 if (task.controlState.toggle === 0)
 ```
 * Se asegura de que si el switch esta apagado, se detiene el render, por ende no sale nada
+
+##### Como se configuraron los widgets
+
+En general, los address que se les asignan es para que se sepa que widget esta mandando los datos
+
+###### RGB
+* Solo se le puso el adres /rgb_1 para que se sepa que widget mando esos datos
+
+###### Slider
+* Se le asigno un address, /size
+* Y se le puso un tamaño maximo y un minimo
+<img width="306" height="106" alt="image" src="https://github.com/user-attachments/assets/2438eed1-6122-4406-9ad1-e1ad252ea4f8" />
+
+###### Switch
+* Se le asigno un address, /toggle
+* Y se le pusieron los siguientes valores
+<img width="334" height="111" alt="image" src="https://github.com/user-attachments/assets/209aaeee-eb1d-4e59-9306-7dcd9cac49a8" />
 
 
 
