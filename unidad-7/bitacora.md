@@ -1169,11 +1169,28 @@ En general, los address que se les asignan es para que se sepa que widget esta m
 
 
 
-
-
 ```
 ```
 
 <br><br>
 
 ## Bitácora de reflexión
+
+```md
+| Aspecto | Unidad 4 (ASCII) | Unidad 5 (Binario) | Unidad 6 (Strudel) | Unidad 7 (Open Stage Control) |
+|---|---|---|---|---|
+| Fuente de datos | micro:bit | micro:bit | Strudel | Open Stage Control |
+| Formato del mensaje | CSV (texto) | binario | JSON + args | OSC UDP |
+| Tipo de dato | sensores y botones | sensores y botones | eventos musicales | parámetros persistentes |
+| Problema técnico principal | parsing de texto | interpretación de bytes | sincronización temporal | persistencia de estado |
+| Validación/control | parseCsvLine | checksum | estructura + timestamp | address + args |
+| Lugar de traducción | Adapter | Adapter | Adapter | Adapter |
+| Papel del tiempo | inmediato | inmediato | basado en timestamp | persistente |
+| Relación con el estado | estado inmediato | estado inmediato | eventos efímeros | estado persistente |
+```
+
+
+
+
+
+
