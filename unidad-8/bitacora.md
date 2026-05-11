@@ -11,5 +11,43 @@
 
 ### Arquitectura general del sistema
 
+#### Microbit
+
+```
+MICROBIT
+↓
+MicrobitAsciiAdapter
+↓
+                 ┌───────────────────────┐
+STRUDEL ───────→ │                       │
+↓                │     bridgeServer      │
+StrudelAdapter   │                       │
+↓                └───────────────────────┘
+                                   ↓
+OPEN STAGE CONTROL                WebSocket
+↓                                  ↓
+OpenStageControlAdapter     bridgeClient.js
+                                   ↓
+                                FSMTask
+                                   ↓
+                             updateLogic()
+                                   ↓
+                             drawRunning()
+                                   ↓
+                         VISUALES EN p5.js
+```
+
+### Rol de cada fuente
+
+| Fuente | Qué controla | Cómo entra al sistema | Por qué se usa |
+|---|---|---|---|
+| micro:bit | Cambio de formas visuales y partículas | Serial → MicrobitAsciiAdapter | Permite interacción física y gestual |
+| Strudel | Generación de eventos musicales y temporales | WebSocket → StrudelAdapter | Controla sincronización audiovisual |
+| Open Stage Control | Parámetros globales visuales | OSC → OpenStageControlAdapter | Permite manipulación performática en tiempo real |
+
+
+
+
+
 
 ## Bitácora de reflexión
