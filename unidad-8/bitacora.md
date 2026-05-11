@@ -115,7 +115,7 @@ Adapter -> bridgeServer -> bridgeClient -> FSMTask -> updateLogic -> drawRunning
 
 #### Sketch.js
 
-```
+``` js
 // ========================================
 // EVENTS
 // ========================================
@@ -870,7 +870,7 @@ function windowResized() {
 
 #### bridgeServer.js
 
-```
+``` js
 //   Uso:
 //     node bridgeServer.js
 //     node bridgeServer.js --serialPort COM5 --baud 115200
@@ -1367,7 +1367,7 @@ main().catch((e) => {
 
 #### bridgeClient.js
 
-```
+``` js
 class BridgeClient {
 
   constructor(url = "ws://127.0.0.1:8081") {
