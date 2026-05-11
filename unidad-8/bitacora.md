@@ -99,6 +99,18 @@ Adapter -> bridgeServer -> bridgeClient -> FSMTask -> updateLogic -> drawRunning
    - Cambia los colores, Aplica todos los efectos
 
  
+### Evidencias
+<img width="1912" height="762" alt="image" src="https://github.com/user-attachments/assets/5d359244-9fed-4c01-82a2-869f39241f99" />
+
+<br><br>
+
+<img width="1918" height="695" alt="image" src="https://github.com/user-attachments/assets/acafc05b-565d-43b7-a04f-2011876640e6" />
+
+<br><br>
+
+<img width="1913" height="692" alt="image" src="https://github.com/user-attachments/assets/3a2186f1-8f16-4fea-92b0-16d64fbd5db4" />
+
+
 
 
 
